@@ -5,6 +5,12 @@
         </h2>
     </x-slot>
 
+    @forelse($items as $item)
+    <p>{{ $item->title }}</p>
+   @empty
+    <p>No items found.</p>
+   @endforelse
+
     <div class="container mx-auto p-6">
         <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
             <h1 class="text-2xl font-bold">Latest Reports</h1>
@@ -22,15 +28,17 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             @forelse($items as $item)
-                <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 flex flex-col">
+                <div class="bg-gradient-to-r from-blue-500 to-cyan-400 p-[1px] sm:rounded-lg shadow-sm overflow-hidden flex flex-col">
+                    <div class="bg-white p-6 sm:rounded-[calc(0.5rem-1px)]">
                     <div class="h-48 bg-gray-100 flex items-center justify-center">
                         @if($item->image_path)
-                            <img src="{{ asset('storage/' . $item->image_path) }}" class="w-full h-full object-cover">
+                            <img src="/storage/{{ $item->image_path }}" class="w-full h-full object-cover">
                         @else
                             <div class="text-center">
-                                <span class="text-gray-400 block text-sm italic">No Image</span>
+                                <span class="text-white block text-sm italic">No Image</span>
                             </div>
                         @endif
+                    </div>
                     </div>
 
                     <div class="p-4 flex-grow flex flex-col">
@@ -41,9 +49,9 @@
                             </span>
                         </div>
                         
-                        <p class="text-gray-600 text-sm"><i class="fas fa-tag"></i> {{ $item->category }}</p>
-                        <p class="text-gray-600 text-sm mt-1"><i class="fas fa-map-marker-alt"></i> {{ $item->location }}</p>
-                        <p class="text-gray-400 text-[10px] mt-auto pt-4">{{ $item->created_at->diffForHumans() }}</p>
+                        <p class="text-white text-sm"><i class="fas fa-tag"></i> {{ $item->category }}</p>
+                        <p class="text-white text-sm mt-1"><i class="fas fa-map-marker-alt"></i> {{ $item->location }}</p>
+                        <p class="text-white text-[10px] mt-auto pt-4">{{ $item->created_at->diffForHumans() }}</p>
                         
                         <a href="{{ route('items.show', $item->id) }}" class="mt-4 block text-center bg-gray-800 text-white py-2 rounded hover:bg-gray-700 transition">
                             View Details
@@ -61,4 +69,5 @@
             {{ $items->appends(request()->query())->links() }}
         </div>
     </div>
+</div>
 </x-app-layout>

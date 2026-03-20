@@ -31,14 +31,18 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+             'address' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             
         ]);
 
         $user = User::create([
-            'name' => $request->name,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'address' => $request->address,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => 'user',
@@ -50,4 +54,14 @@ class RegisteredUserController extends Controller
 
         return redirect(route('dashboard', absolute: false));
     }
+    public function myApprovedClaims()
+{
+    $approvedClaims = \App\Models\Claim::where('user_id', auth()->id())
+                        ->where('status', 'approved')
+                        ->with('item')
+                        ->latest()
+                        ->get();
+
+    return view('claims.approved', compact('approvedClaims'));
+}
 }

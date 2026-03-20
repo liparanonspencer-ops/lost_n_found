@@ -18,11 +18,16 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
-    {
-        // Define the 'admin' gate based on your migration's roles
-        Gate::define('admin', function (User $user) {
-            return $user->role === 'admin';
-        });
-    }
+  public function boot(): void
+{
+    // Define the 'admin' gate
+    Gate::define('admin', function (User $user) {
+        return $user->role === 'admin';
+    });
+
+    // ADD THIS: Define the 'user' gate so @can('user') works
+    Gate::define('user', function (User $user) {
+        return $user->role === 'user';
+    });
+}
 }

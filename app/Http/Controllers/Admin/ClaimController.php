@@ -29,17 +29,31 @@ class ClaimController extends Controller
         return view('admin.claims.history', compact('claims'));
     }
 
-    public function update(Request $request, Claim $claim)
-    {
-        $request->validate(['status' => 'required|in:approved,rejected']);
+  
+public function approveClaim($claimId)
+{
+    // Use a Transaction to ensure all updates happen together
+    DB::transaction(function () use ($claimId) {
+        // 1. Find the specific claim being approved
+        $claim = \App\Models\Claim::findOrFail($claimId);
         
-        $claim->update(['status' => $request->status]);
+        // 2. Mark this specific claim as 'approved'
+        $claim->update(['status' => 'approved']);
 
-        // If approved, you might want to mark the item as resolved
-        if ($request->status === 'approved') {
-            $claim->item->update(['is_resolved' => true]);
-        }
+        // 3. Mark the Item itself as 'claimed' (makes it invisible/disabled for others)
+        // Note: Ensure 'status' is in the $fillable array of your Item Model
+        $item = \App\Models\Item::findOrFail($claim->item_id);
+        $item->update(['status' => 'claimed']);
 
-        return back()->with('success', 'Claim status updated to ' . $request->status);
-    }
+        // --- STEP 3: THE AUTO-REJECT LOGIC ---
+        // Find every OTHER claim for this specific item that is still 'pending'
+        // and mark them as 'rejected' automatically.
+        \App\Models\Claim::where('item_id', $claim->item_id)
+            ->where('id', '!=', $claimId) // Don't reject the one we just approved!
+            ->where('status', 'pending')
+            ->update(['status' => 'rejected']);
+    });
+
+    return back()->with('success', 'Claim approved! All other pending requests for this item have been automatically declined.');
+}
 }

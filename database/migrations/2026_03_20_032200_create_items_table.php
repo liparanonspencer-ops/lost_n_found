@@ -17,13 +17,13 @@ return new class extends Migration
         
         // Use $table->string() to define the column name in the database
         $table->string('item_name'); 
-        
+       
         $table->text('description');
         $table->enum('type', ['lost', 'found']);
         $table->string('category');
         $table->string('location');
         $table->string('image_path')->nullable();
-        $table->boolean('is_resolved')->default(false);
+        $table->boolean('is_resolved')->default(false)->after('status');
         $table->timestamps();
     });
 }
