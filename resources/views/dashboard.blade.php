@@ -15,9 +15,8 @@
                 <a href="{{ route('items.index') }}" class="bg-white border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-bold shadow hover:bg-gray-50 transition">
                     View All Items
                 </a>
-            </div>
-
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
+        </div>
+            <div class="bg-gray-200 dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
                 <h3 class="text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">Recent Reports</h3>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">

@@ -19,7 +19,8 @@
                 </div>
             @endif
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-200">
+            <div class="bg-gradient-to-r from-blue-500 to-cyan-400 p-[1px] sm:rounded-lg shadow-sm overflow-hidden">
+                 <div class="bg-white p-6 sm:rounded-[calc(0.5rem-1px)]">
                 <div class="md:flex">
                     <div class="md:w-1/2 bg-gray-100 flex items-center justify-center p-4">
                         @if($item->image_path)
@@ -113,4 +114,5 @@
             </div>
         </div>
     </div>
+</div>
 </x-app-layout>

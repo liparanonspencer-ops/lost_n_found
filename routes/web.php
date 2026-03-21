@@ -25,8 +25,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/items/create', [ItemController::class, 'create'])->name('items.create');
     Route::post('/items', [ItemController::class, 'store'])->name('items.store');
     Route::get('/items/{item}', [ItemController::class, 'show'])->name('items.show');
+    Route::get('search/items/{items}',[ItemController::class, 'search'])->name('items.search');
     Route::post('/items/{item}/claim', [ItemController::class, 'claim'])->name('items.claim');
 
+  
     // 3. Admin Only Routes (Role Check)
     Route::middleware(['can:admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/claims', [ClaimController::class, 'index'])->name('claims.index');

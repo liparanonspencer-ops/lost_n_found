@@ -12,7 +12,8 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 border border-gray-200">
+            <div class="bg-gradient-to-r from-blue-500 to-cyan-400 p-[1px] sm:rounded-lg shadow-sm overflow-hidden">
+                   <div class="bg-white p-6 sm:rounded-[calc(0.5rem-1px)]">
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="bg-gray-50 border-b">
@@ -30,7 +31,7 @@
                                     <p class="text-xs text-gray-400">{{ $claim->item->category }}</p>
                                 </td>
                                 <td class="p-4">
-                                    <div class="text-sm">{{ $claim->user->name }}</div>
+                                    <div class="text-sm">{{ $claim->user->first_name }} {{ $claim->user->last_name }}</div>
                                     <div class="text-xs text-gray-400">{{ $claim->user->email }}</div>
                                 </td>
                                 <td class="p-4 text-sm text-gray-500">
@@ -57,4 +58,6 @@
             </div>
         </div>
     </div>
+</div>
+</div>
 </x-app-layout>

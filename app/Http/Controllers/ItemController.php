@@ -2,50 +2,72 @@
 
 namespace App\Http\Controllers;
 
-// FIX 1: Use the correct singular Model name 'Item'
 use App\Models\Item; 
+use App\Models\Claim; // Added Claim import
 use Illuminate\Http\Request;
 
 class ItemController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // FIX 2: Since we imported 'Item' above, we don't need the full path here
-        $items = Item::latest()->paginate(10);
+        $query = Item::query();
+
+        // STEP 5: Only show items that are NOT resolved by default
+        // This keeps your feed clean of already-found items
+        $query->where('is_resolved', false);
+
+        if ($request->has('search')) {
+            $search = $request->get('search');
+            $query->where(function($q) use ($search) {
+                $q->where('item_name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhere('category', 'like', "%{$search}%");
+            });
+        }
+
+        $items = $query->latest()->paginate(12);
         return view('items.index', compact('items'));
     }
 
-    public function create()
-    {
-        return view('items.create');
-    }
-
-    // FIX 3: Ensure the Type-hint matches the imported Model name 'Item'
     public function show(Item $item)
     {
         return view('items.show', compact('item'));
     }
 
     public function claim(Request $request, Item $item)
-{
-    // Prevent owner from claiming their own item
-    if (auth()->id() === $item->user_id) {
-        return back()->with('error', 'You cannot claim your own item.');
+    {
+        // STEP 3 LOGIC: Prevent claiming if the item is already resolved/claimed
+        if ($item->is_resolved || $item->status === 'claimed') {
+            return back()->with('error', 'This item has already been successfully claimed.');
+        }
+
+        // Prevent owner from claiming their own item
+        if (auth()->id() === $item->user_id) {
+            return back()->with('error', 'You cannot claim your own item.');
+        }
+
+        // Prevent double-claiming by the same user
+        $existingClaim = Claim::where('item_id', $item->id)
+                             ->where('user_id', auth()->id())
+                             ->first();
+                             
+        if ($existingClaim) {
+            return back()->with('error', 'You have already submitted a claim for this item.');
+        }
+
+        // Create the claim
+        Claim::create([
+            'item_id' => $item->id,
+            'user_id' => auth()->id(),
+            'message' => 'I would like to claim this item.',
+            'status'  => 'pending', // Explicitly set starting status
+        ]);
+
+        return back()->with('success', 'Claim submitted successfully! The admin will review it.');
     }
-
-    // Create the claim
-    \App\Models\Claim::create([
-        'item_id' => $item->id,
-        'user_id' => auth()->id(),
-        'message' => 'I would like to claim this item.',
-    ]);
-
-    return back()->with('success', 'Claim submitted successfully! The owner will be notified.');
-}
 
     public function store(Request $request)
     {
-        // 1. Validate all incoming data
         $request->validate([
             'item_name'   => 'required|string|max:255',
             'description' => 'required|string',
@@ -55,26 +77,29 @@ class ItemController extends Controller
             'image'       => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // 2. Create the new item instance (Using the imported 'Item' class)
         $item = new Item();
         $item->user_id = auth()->id();
-        
-        // 3. Map the Form fields to the Database columns
         $item->item_name   = $request->item_name;
         $item->description = $request->description;
         $item->type        = $request->type;
         $item->category    = $request->category;
         $item->location    = $request->location;
+        $item->status      = 'available'; // Set initial status
+        $item->is_resolved = false;       // Set initial resolved state
 
-        // 4. Handle the Image Upload
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('items', 'public');
             $item->image_path = $path;
         }
 
-        // 5. Save to Database
         $item->save();
 
         return redirect()->route('items.index')->with('success', 'Item reported successfully!');
     }
+   public function create()
+    {
+        return view('items.create');
+    }
+
+  
 }
