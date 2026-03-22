@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('item_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // The claimant
             $table->text('message')->nullable();
+            $table->string('claim_reference')->nullable()->unique()                                                        ;
             $table->string('status')->default('pending'); // pending, accepted, rejected
             $table->timestamps();
         });
