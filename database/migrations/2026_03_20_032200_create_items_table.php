@@ -23,7 +23,8 @@ return new class extends Migration
         $table->string('category');
         $table->string('location');
         $table->string('image_path')->nullable();
-        $table->boolean('is_resolved')->default(false)->after('status');
+        $table->boolean('is_resolved')->default(0);
+        $table->string('status')->default('available');
         $table->timestamps();
     });
 }
