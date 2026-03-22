@@ -44,6 +44,7 @@
                     </div>
 
                     {{-- Right Side: Details Section --}}
+                    
                     <div class="lg:w-1/2 p-8 lg:p-12">
                         <div class="mb-6">
                             <p class="text-indigo-600 dark:text-indigo-400 font-black text-xs uppercase tracking-[0.2em] mb-2">{{ $item->category }}</p>
@@ -55,6 +56,15 @@
                                 <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Description</h3>
                                 <p class="text-slate-600 dark:text-slate-300 leading-relaxed">{{ $item->description }}</p>
                             </div>
+
+                             <div class="font-bold absolute bottom-25 right-12">
+                                <span class="border border-emerald-700 animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 px-3 py-1 text-[12px] font-black uppercase tracking-tighter rounded-full shadow-sm {{ $item->status == 'lost' ? 'bg-rose-500 text-white' : 'bg-emerald-500 text-white' }}">
+                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                            </span>
+                                    {{ $item->status }}
+                                </span>
+                            </div>
+
                             
                             <div class="bg-slate-50 dark:bg-gray-700/50 p-4 rounded-2xl">
                                 <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Location</h3>
