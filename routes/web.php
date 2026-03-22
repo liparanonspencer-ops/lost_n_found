@@ -45,7 +45,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Admin dashboard monitoring report routes
     Route::get('/api/admin/stats', function (){
         return response()->json([
-            'active' => Item::where('status','active')->count(),
+            'active' => Item::where('status','available')->count(),
             'pending' => Claim::where('status','pending')->count(),
             'resolved' => Claim::where('status','approved')->count(),
             'users' => User::count(),

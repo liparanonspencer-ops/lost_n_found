@@ -38,22 +38,22 @@
                     <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                 </span>
             </div>
-            <p class="text-sm text-slate-500 font-medium">Monitoring live platform activity...</p>
+            <p class="text-sm text-slate-500 font-medium">Statics live platform activity...</p>
         </div>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-[2rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-gray-700 transition-all">
+        <div class="bg-green-500 dark:bg-gray-800 p-6 rounded-[2rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-gray-700 transition-all">
             <div class="flex items-center justify-between mb-4">
                 <div class="w-12 h-12 bg-indigo-50 dark:bg-indigo-900/30 rounded-2xl flex items-center justify-center text-indigo-600 dark:text-indigo-400">
                     <i class="fas fa-box-open text-xl"></i>
                 </div>
             </div>
-            <h3 class="text-slate-500 text-xs font-black uppercase tracking-widest">Active Posts</h3>
+            <h3 class="text-white text-xs font-black uppercase tracking-widest">Active Posts</h3>
             <p class="text-3xl font-black mt-1 text-slate-900 dark:text-white tabular-nums" x-text="stats.active"></p>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-[2rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-gray-700 transition-all">
+        <div class="bg-yellow-400 dark:bg-gray-800 p-6 rounded-[2rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-gray-700 transition-all">
             <div class="flex items-center justify-between mb-4">
                 <div class="w-12 h-12 bg-amber-50 dark:bg-amber-900/30 rounded-2xl flex items-center justify-center text-amber-600 dark:text-amber-400">
                     <i class="fas fa-clock text-xl"></i>
@@ -62,27 +62,27 @@
                     <span class="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded-lg uppercase animate-pulse">Action Req.</span>
                 </template>
             </div>
-            <h3 class="text-slate-500 text-xs font-black uppercase tracking-widest">Pending Claims</h3>
+            <h3 class="text-white text-xs font-black uppercase tracking-widest">Pending Claims</h3>
             <p class="text-3xl font-black mt-1 text-slate-900 dark:text-white tabular-nums" x-text="stats.pending"></p>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-[2rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-gray-700 transition-all">
+        <div class="bg-blue-500 dark:bg-gray-800 p-6 rounded-[2rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-gray-700 transition-all">
             <div class="flex items-center justify-between mb-4">
                 <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center text-emerald-600 dark:text-emerald-400">
                     <i class="fas fa-handshake text-xl"></i>
                 </div>
             </div>
-            <h3 class="text-slate-500 text-xs font-black uppercase tracking-widest">Resolved</h3>
+            <h3 class="text-white text-xs font-black uppercase tracking-widest">Resolved</h3>
             <p class="text-3xl font-black mt-1 text-slate-900 dark:text-white tabular-nums" x-text="stats.resolved"></p>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-[2rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-gray-700 transition-all">
+        <div class="bg-indigo-500 dark:bg-gray-800 p-6 rounded-[2rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-gray-700 transition-all">
             <div class="flex items-center justify-between mb-4">
                 <div class="w-12 h-12 bg-rose-50 dark:bg-rose-900/30 rounded-2xl flex items-center justify-center text-rose-600 dark:text-rose-400">
                     <i class="fas fa-users text-xl"></i>
                 </div>
             </div>
-            <h3 class="text-slate-500 text-xs font-black uppercase tracking-widest">Total Users</h3>
+            <h3 class="text-white text-xs font-black uppercase tracking-widest">Total Users</h3>
             <p class="text-3xl font-black mt-1 text-slate-900 dark:text-white tabular-nums" x-text="stats.users"></p>
         </div>
     </div>

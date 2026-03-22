@@ -85,14 +85,15 @@
                                     <td class="p-6 text-right">
                                         <div class="flex justify-end items-center gap-2">
                                             @if($claim->status === 'pending')
-                                              <form action="{{ route('admin.claims.update', $claim->id) }}" method="POST">
-    @csrf
-    @method('PATCH')
-    <input type="hidden" name="status" value="approved">
-    <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2 rounded-xl font-bold transition-all shadow-lg shadow-emerald-200">
-        Approve
-    </button>
-</form>
+                                                <form id="approve-form-{{ $claim->id }}" action="{{ route('admin.claims.update', $claim) }}" method="POST" class="inline">
+                                                    @csrf @method('PATCH')
+                                                    <input type="hidden" name="status" value="approved">
+                                                    <button type="button" 
+                                                        onclick="openConfirmModal('approve-form-{{ $claim->id }}', 'approve')"
+                                                        class="h-9 px-4 bg-emerald-600 text-white text-xs font-bold rounded-xl shadow-lg shadow-emerald-100 dark:shadow-none hover:bg-emerald-700 transition active:scale-95">
+                                                        Approve
+                                                    </button>
+                                                </form>
 
                                                 <form id="reject-form-{{ $claim->id }}" action="{{ route('admin.claims.update', $claim) }}" method="POST" class="inline">
                                                     @csrf @method('PATCH')
@@ -154,4 +155,45 @@
             </div>
         </div>
     </div>
+     <script>
+        let activeFormId = null;
+
+        function openConfirmModal(formId, type) {
+            activeFormId = formId;
+            const modal = document.getElementById('confirmationModal');
+            const title = document.getElementById('modal-title');
+            const desc = document.getElementById('modalDescription');
+            const iconContainer = document.getElementById('modalIconContainer');
+            const icon = document.getElementById('modalIcon');
+            const confirmBtn = document.getElementById('confirmBtn');
+
+            if (type === 'approve') {
+                title.innerText = 'Approve This Claim?';
+                desc.innerText = 'By approving, this item will be marked as resolved. All other pending claims for this item will be automatically rejected.';
+                iconContainer.className = 'mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10';
+                icon.className = 'fas fa-check-circle text-green-600';
+                confirmBtn.className = 'inline-flex w-full justify-center rounded-md bg-green-600 px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-green-700 sm:ml-3 sm:w-auto';
+            } else {
+                title.innerText = 'Reject This Claim?';
+                desc.innerText = 'Are you sure you want to reject this request? This user will be notified that their claim was unsuccessful.';
+                iconContainer.className = 'mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10';
+                icon.className = 'fas fa-exclamation-triangle text-red-600';
+                confirmBtn.className = 'inline-flex w-full justify-center rounded-md bg-red-600 px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-red-700 sm:ml-3 sm:w-auto';
+            }
+
+            modal.classList.remove('hidden');
+
+            confirmBtn.onclick = function() {
+                // Optional: Show loading state on button
+                confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
+                confirmBtn.disabled = true;
+                document.getElementById(activeFormId).submit();
+            };
+        }
+
+        function closeModal() {
+            document.getElementById('confirmationModal').classList.add('hidden');
+            activeFormId = null;
+        }
+    </script>
 </x-app-layout>
