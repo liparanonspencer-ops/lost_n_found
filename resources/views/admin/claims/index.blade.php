@@ -85,15 +85,14 @@
                                     <td class="p-6 text-right">
                                         <div class="flex justify-end items-center gap-2">
                                             @if($claim->status === 'pending')
-                                                <form id="approve-form-{{ $claim->id }}" action="{{ route('admin.claims.update', $claim) }}" method="POST" class="inline">
-                                                    @csrf @method('PATCH')
-                                                    <input type="hidden" name="status" value="approved">
-                                                    <button type="button" 
-                                                        onclick="openConfirmModal('approve-form-{{ $claim->id }}', 'approve')"
-                                                        class="h-9 px-4 bg-emerald-600 text-white text-xs font-bold rounded-xl shadow-lg shadow-emerald-100 dark:shadow-none hover:bg-emerald-700 transition active:scale-95">
-                                                        Approve
-                                                    </button>
-                                                </form>
+                                              <form action="{{ route('admin.claims.update', $claim->id) }}" method="POST">
+    @csrf
+    @method('PATCH')
+    <input type="hidden" name="status" value="approved">
+    <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2 rounded-xl font-bold transition-all shadow-lg shadow-emerald-200">
+        Approve
+    </button>
+</form>
 
                                                 <form id="reject-form-{{ $claim->id }}" action="{{ route('admin.claims.update', $claim) }}" method="POST" class="inline">
                                                     @csrf @method('PATCH')

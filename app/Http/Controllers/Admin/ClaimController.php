@@ -56,4 +56,31 @@ public function approveClaim($claimId)
 
     return back()->with('success', 'Claim approved! All other pending requests for this item have been automatically declined.');
 }
+
+// Add this inside your Admin\ClaimController class
+public function verify(Claim $claim)
+{
+    // Mark the claim as completed/claimed
+    $claim->update(['status' => 'approved']); 
+
+    // Optional: Mark the item itself as resolved so it's no longer "Lost"
+    $claim->item->update(['status' => 'claimed']);
+
+    return redirect()->route('admin.claims.index')
+        ->with('success', 'Item successfully verified and handed over to the owner!');
+}
+
+public function update(Request $request, Claim $claim)
+{
+    // Update the claim status
+    $claim->update([
+        'status' => $request->status // This will be 'approved'
+    ]);
+
+    // Optional: You can also update the item status here 
+    // to hide it from the public list once approved
+    // $claim->item->update(['status' => 'approved']);
+
+    return back()->with('success', 'Claim has been approved! The user can now see their QR code.');
+}
 }

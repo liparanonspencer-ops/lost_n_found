@@ -25,6 +25,7 @@
             <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] shadow-xl shadow-slate-200/60 dark:shadow-none overflow-hidden border border-slate-100 dark:border-gray-700">
                 <div class="flex flex-col lg:flex-row">
                     
+                    {{-- Left Side: Image Section --}}
                     <div class="lg:w-1/2 bg-slate-100 dark:bg-gray-900 flex items-center justify-center relative min-h-[400px]">
                         @if($item->image_path)
                             <img src="{{ asset('storage/' . $item->image_path) }}" class="w-full h-full object-cover">
@@ -42,6 +43,7 @@
                         </div>
                     </div>
 
+                    {{-- Right Side: Details Section --}}
                     <div class="lg:w-1/2 p-8 lg:p-12">
                         <div class="mb-6">
                             <p class="text-indigo-600 dark:text-indigo-400 font-black text-xs uppercase tracking-[0.2em] mb-2">{{ $item->category }}</p>
@@ -65,45 +67,61 @@
                             </div>
                         </div>
 
+                        {{-- Action Section --}}
                         <div class="mt-8 pt-8 border-t border-slate-100 dark:border-gray-700">
                             @if(auth()->id() !== $item->user_id)
                                 @php
                                     $userClaim = \App\Models\Claim::where('item_id', $item->id)->where('user_id', auth()->id())->first();
                                 @endphp
 
-                                @if($userClaim)
-                                    @if($userClaim->status === 'approved')
-                                        <div class="bg-emerald-50 dark:bg-emerald-900/20 p-5 rounded-2xl border border-emerald-100 dark:border-emerald-800 text-center">
-                                            <div class="flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-2">
-                                                <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                                                <span class="font-black">Claim Approved!</span>
-                                            </div>
-                                            <p class="text-xs text-emerald-700 dark:text-emerald-300">The admin has verified your claim. Please coordinate retrieval.</p>
-                                        </div>
-                                    @elseif($userClaim->status === 'rejected')
-                                        <div class="bg-rose-50 p-4 rounded-2xl border border-rose-100 text-rose-700 text-center text-sm font-bold">
-                                            Claim Not Approved
-                                        </div>
-                                    @else
-                                        <div class="bg-amber-50 p-5 rounded-2xl border border-amber-100 text-amber-800 text-center">
-                                            <p class="font-bold flex items-center justify-center">
-                                                <svg class="w-5 h-5 mr-2 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                                Claim Pending Review
-                                            </p>
-                                        </div>
-                                    @endif
-                                @else
-                                    <form action="{{ route('items.claim', $item->id) }}" method="POST">
+                                @if(!$userClaim)
+                                    {{-- No Claim Yet: Show Request Button --}}
+                                    <form action="{{ route('claims.store') }}" method="POST">
                                         @csrf
-                                        <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-4 px-6 rounded-2xl shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition transform active:scale-[0.98]">
+                                        <input type="hidden" name="item_id" value="{{ $item->id }}">
+                                        <button type="submit" class="w-full py-4 rounded-2xl shadow-lg text-white font-bold transition-transform hover:scale-[1.02] active:scale-[0.98]" style="background: #5b4ef3;">
                                             This is Mine / I Found This
                                         </button>
-                                        <p class="text-center text-slate-400 text-[11px] mt-4 font-medium uppercase tracking-widest">
-                                            Verification will be required
-                                        </p>
                                     </form>
+                                    <p class="text-[10px] text-center text-slate-400 mt-3 uppercase tracking-widest font-bold">Verification will be required</p>
+
+                                @elseif($userClaim->status === 'approved')
+                                    {{-- Claim Approved: Show QR Code --}}
+                                    <div class="bg-emerald-50 dark:bg-emerald-900/20 p-6 rounded-[2rem] border border-emerald-100 dark:border-emerald-800 text-center">
+                                        <div class="flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-4">
+                                            <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                                            <span class="font-black uppercase tracking-wider">Claim Approved!</span>
+                                        </div>
+                                        
+                                        <div class="bg-white p-4 rounded-2xl inline-block shadow-sm mb-4">
+                                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ urlencode(url('/admin/verify-claim/' . $userClaim->id)) }}" 
+                                                 alt="Verification QR Code"
+                                                 class="mx-auto">
+                                        </div>
+                                        
+                                        <p class="text-xs text-emerald-700 dark:text-emerald-300 font-medium leading-relaxed">
+                                            Show this QR code to the Admin <br> to finalize the retrieval.
+                                        </p>
+                                    </div>
+
+                                @elseif($userClaim->status === 'rejected')
+                                    <div class="bg-rose-50 p-5 rounded-2xl border border-rose-100 text-rose-700 text-center">
+                                        <p class="font-black uppercase text-xs tracking-widest">Claim Not Approved</p>
+                                    </div>
+
+                                @else
+                                    {{-- Claim Pending --}}
+                                    <div class="bg-amber-50 p-6 rounded-2xl border border-amber-100 text-amber-800 text-center">
+                                        <div class="flex items-center justify-center mb-1">
+                                            <svg class="w-5 h-5 mr-2 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                            <p class="font-black uppercase text-xs tracking-widest">Claim Pending Review</p>
+                                        </div>
+                                        <p class="text-xs text-amber-700">The admin is checking your claim.</p>
+                                    </div>
                                 @endif
+
                             @else
+                                {{-- User is the one who posted the item --}}
                                 <div class="bg-indigo-50 dark:bg-indigo-900/20 p-5 rounded-2xl border border-indigo-100 dark:border-indigo-800 text-indigo-800 dark:text-indigo-300 text-sm text-center font-bold">
                                     You posted this report.
                                 </div>

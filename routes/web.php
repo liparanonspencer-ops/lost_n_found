@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Item; 
 use App\Models\User;
 use App\Models\Claim;
+use App\Http\Controllers\UserClaimController;
 
 // Public Routes
 Route::get('/', function () {
@@ -28,7 +29,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/items', [ItemController::class, 'store'])->name('items.store');
     Route::get('/items/{item}', [ItemController::class, 'show'])->name('items.show');
     Route::get('search/items/{items}',[ItemController::class, 'search'])->name('items.search');
-    Route::post('/items/{item}/claim', [ItemController::class, 'claim'])->name('items.claim');
+    
+    Route::post('/claims', [UserClaimController::class, 'store'])->name('claims.store');
 
   
     // 3. Admin Only Routes (Role Check)
@@ -36,17 +38,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/claims', [ClaimController::class, 'index'])->name('claims.index');
         Route::patch('/claims/{claim}', [ClaimController::class, 'update'])->name('claims.update');
         Route::get('/claims/history', [ClaimController::class, 'history'])->name('claims.history');
+        // --- NEW: Route for the Admin to scan the QR code ---
+        Route::get('/verify-claim/{claim}', [ClaimController::class, 'verify'])
+            ->name('verify.claim');
     });
     // Admin dashboard monitoring report routes
-Route::get('/api/admin/stats', function (){
-    return response()->json([
-        'active' => Item::where('status','active')->count(),
-        'pending' => Claim::where('status','pending')->count(),
-        'resolved' => Claim::where('status','approved')->count(),
-        'users' => User::count(),
-    ]);
-})->middleware(['can.admin']);
-
+    Route::get('/api/admin/stats', function (){
+        return response()->json([
+            'active' => Item::where('status','active')->count(),
+            'pending' => Claim::where('status','pending')->count(),
+            'resolved' => Claim::where('status','approved')->count(),
+            'users' => User::count(),
+        ]);
+    })->middleware(['can:admin']);
     // 4. Profile Management
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

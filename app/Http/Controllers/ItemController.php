@@ -101,5 +101,15 @@ class ItemController extends Controller
         return view('items.create');
     }
 
-  
+   public function verifyClaim($id)
+{
+    $item = Item::findOrFail($id);
+
+    // Update the status to 'returned' or 'claimed'
+    $item->status = 'claimed';
+    $item->save();
+
+    // Redirect with a success message
+    return redirect('/dashboard')->with('success', 'Item #' . $id . ' has been successfully claimed!');
+}
 }
