@@ -2,6 +2,7 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-black text-2xl text-slate-800 dark:text-slate-100 leading-tight tracking-tight">
+                {{ __('Dashboard') }}
             </h2>
             @can('admin')
             <div class="hidden md:flex items-center gap-3">
@@ -16,80 +17,81 @@
     <div class="py-8 bg-slate-50 dark:bg-gray-900 min-h-screen text-slate-900 dark:text-slate-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-         @can('admin')
-<div class="mb-12" 
-     x-data="{ 
-        stats: { active: 0, pending: 0, resolved: 0, users: 0 },
-        async updateStats() {
-            try {
-                let response = await fetch('/api/admin/stats');
-                this.stats = await response.json();
-            } catch (e) { console.log('Stats fetch failed'); }
-        }
-     }" 
-     x-init="updateStats(); setInterval(() => updateStats(), 10000)"> {{-- Refreshes every 10s --}}
+            @can('admin')
+            <div class="mb-12" 
+                 x-data="{ 
+                    stats: { active: 0, pending: 0, resolved: 0, users: 0 },
+                    async updateStats() {
+                        try {
+                            let response = await fetch('/api/admin/stats');
+                            this.stats = await response.json();
+                        } catch (e) { console.log('Stats fetch failed'); }
+                    }
+                 }" 
+                 x-init="updateStats(); setInterval(() => updateStats(), 10000)">
 
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-        <div>
-            <div class="flex items-center gap-2">
-                <h3 class="font-bold text-lg text-slate-800 dark:text-white">Management Overview</h3>
-                <span class="relative flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
-            </div>
-            <p class="text-sm text-slate-500 font-medium">Statics live platform activity...</p>
-        </div>
-    </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="bg-green-500 dark:bg-gray-800 p-6 rounded-[2rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-gray-700 transition-all">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-12 h-12 bg-indigo-50 dark:bg-indigo-900/30 rounded-2xl flex items-center justify-center text-indigo-600 dark:text-indigo-400">
-                    <i class="fas fa-box-open text-xl"></i>
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 class="font-bold text-lg text-slate-800 dark:text-white">Management Overview</h3>
+                            <span class="relative flex h-2 w-2">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                            </span>
+                        </div>
+                        <p class="text-sm text-slate-500 font-medium">Statistics live platform activity...</p>
+                    </div>
                 </div>
-            </div>
-            <h3 class="text-white text-xs font-black uppercase tracking-widest">Active Posts</h3>
-            <p class="text-3xl font-black mt-1 text-slate-900 dark:text-white tabular-nums" x-text="stats.active"></p>
-        </div>
 
-        <div class="bg-yellow-400 dark:bg-gray-800 p-6 rounded-[2rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-gray-700 transition-all">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-12 h-12 bg-amber-50 dark:bg-amber-900/30 rounded-2xl flex items-center justify-center text-amber-600 dark:text-amber-400">
-                    <i class="fas fa-clock text-xl"></i>
-                </div>
-                <template x-if="stats.pending > 0">
-                    <span class="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded-lg uppercase animate-pulse">Action Req.</span>
-                </template>
-            </div>
-            <h3 class="text-white text-xs font-black uppercase tracking-widest">Pending Claims</h3>
-            <p class="text-3xl font-black mt-1 text-slate-900 dark:text-white tabular-nums" x-text="stats.pending"></p>
-        </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <a href="{{ route('items.index') }}" class="block transition-transform hover:scale-[1.02] bg-green-500 dark:bg-gray-800 p-6 rounded-[2rem] shadow-xl border border-slate-100 dark:border-gray-700">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-white/20 dark:bg-indigo-900/30 rounded-2xl flex items-center justify-center text-white dark:text-indigo-400">
+                                <i class="fas fa-box-open text-xl"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-white/80 text-xs font-black uppercase tracking-widest">Active Posts</h3>
+                        <p class="text-3xl font-black mt-1 text-white tabular-nums" x-text="stats.active"></p>
+                    </a>
 
-        <div class="bg-blue-500 dark:bg-gray-800 p-6 rounded-[2rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-gray-700 transition-all">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center text-emerald-600 dark:text-emerald-400">
-                    <i class="fas fa-handshake text-xl"></i>
-                </div>
-            </div>
-            <h3 class="text-white text-xs font-black uppercase tracking-widest">Resolved</h3>
-            <p class="text-3xl font-black mt-1 text-slate-900 dark:text-white tabular-nums" x-text="stats.resolved"></p>
-        </div>
+                    <a href="{{ route('admin.claims.index') }}" class="block transition-transform hover:scale-[1.02] bg-yellow-400 dark:bg-gray-800 p-6 rounded-[2rem] shadow-xl border border-slate-100 dark:border-gray-700">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-white/20 dark:bg-amber-900/30 rounded-2xl flex items-center justify-center text-white dark:text-amber-400">
+                                <i class="fas fa-clock text-xl"></i>
+                            </div>
+                            <template x-if="stats.pending > 0">
+                                <span class="text-[10px] font-bold text-amber-900 bg-white/80 px-2 py-1 rounded-lg uppercase animate-pulse">Action Req.</span>
+                            </template>
+                        </div>
+                        <h3 class="text-amber-900/80 text-xs font-black uppercase tracking-widest">Pending Claims</h3>
+                        <p class="text-3xl font-black mt-1 text-amber-900 dark:text-white tabular-nums" x-text="stats.pending"></p>
+                    </a>
 
-        <div class="bg-indigo-500 dark:bg-gray-800 p-6 rounded-[2rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-gray-700 transition-all">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-12 h-12 bg-rose-50 dark:bg-rose-900/30 rounded-2xl flex items-center justify-center text-rose-600 dark:text-rose-400">
-                    <i class="fas fa-users text-xl"></i>
+                    <a href="{{ route('admin.claims.history') }}" class="block transition-transform hover:scale-[1.02] bg-blue-500 dark:bg-gray-800 p-6 rounded-[2rem] shadow-xl border border-slate-100 dark:border-gray-700">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-white/20 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center text-white dark:text-emerald-400">
+                                <i class="fas fa-handshake text-xl"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-white/80 text-xs font-black uppercase tracking-widest">Resolved</h3>
+                        <p class="text-3xl font-black mt-1 text-white tabular-nums" x-text="stats.resolved"></p>
+                    </a>
+
+                    <a href="{{ route('admin.users.index') }}" class="block transition-transform hover:scale-[1.02] bg-indigo-500 dark:bg-gray-800 p-6 rounded-[2rem] shadow-xl border border-slate-100 dark:border-gray-700">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-white/20 dark:bg-rose-900/30 rounded-2xl flex items-center justify-center text-white dark:text-rose-400">
+                                <i class="fas fa-users text-xl"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-white/80 text-xs font-black uppercase tracking-widest">Total Users</h3>
+                        <p class="text-3xl font-black mt-1 text-white tabular-nums" x-text="stats.users"></p>
+                    </a>
                 </div>
+                
+                <hr class="my-12 border-slate-200 dark:border-gray-800">
             </div>
-            <h3 class="text-white text-xs font-black uppercase tracking-widest">Total Users</h3>
-            <p class="text-3xl font-black mt-1 text-slate-900 dark:text-white tabular-nums" x-text="stats.users"></p>
-        </div>
-    </div>
-    
-    <hr class="my-12 border-slate-200 dark:border-gray-800">
-</div>
-@endcan
+            @endcan
+
             @can('user')
             <div class="mb-10 flex flex-col gap-4 sm:flex-row sm:items-center">
                 <a href="{{ route('items.create') }}" 
@@ -162,10 +164,11 @@
                                 <p class="text-slate-500 dark:text-slate-400 max-w-xs mx-auto mt-2 font-medium">Be the first to help the community by reporting an item.</p>
                             </div>
                         @endforelse
-                        @endcan
                     </div>
                 </div>
             </div>
+            @endcan
+
         </div>
     </div>
 </x-app-layout>

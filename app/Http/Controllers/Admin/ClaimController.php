@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Claim;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class ClaimController extends Controller
 {

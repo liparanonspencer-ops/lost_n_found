@@ -2,7 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ItemController;
-use App\Http\Controllers\Admin\ClaimController; // Import this for the admin routes
+use App\Http\Controllers\Admin\ClaimController;
+use App\Http\Controllers\Admin\UserController; // Import the new Admin UserController
 use Illuminate\Support\Facades\Route;
 use App\Models\Item; 
 use App\Models\User;
@@ -38,10 +39,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/claims', [ClaimController::class, 'index'])->name('claims.index');
         Route::patch('/claims/{claim}', [ClaimController::class, 'update'])->name('claims.update');
         Route::get('/claims/history', [ClaimController::class, 'history'])->name('claims.history');
-        // --- NEW: Route for the Admin to scan the QR code ---
-        Route::get('/verify-claim/{claim}', [ClaimController::class, 'verify'])
-            ->name('verify.claim');
+        Route::get('/verify-claim/{claim}', [ClaimController::class, 'verify'])->name('verify.claim');
+
+        // --- CLEAN USER MANAGEMENT ---
+        Route::get('/users', [UserController::class, 'index'])->name('users.index');
+        Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+        Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     });
+
     // Admin dashboard monitoring report routes
     Route::get('/api/admin/stats', function (){
         return response()->json([
@@ -51,10 +56,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'users' => User::count(),
         ]);
     })->middleware(['can:admin']);
-    // 4. Profile Management
+
+    // 4. Profile Management (Self-service)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    // Legacy route redirected to the new clean admin route
+    Route::get('/profile/users', function() {
+        return redirect()->route('admin.users.index');
+    })->name('profile.users.usersindex');
 });
 
 require __DIR__.'/auth.php';
