@@ -79,14 +79,24 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            @can('admin')
              <x-responsive-nav-link :href="route('admin.claims.index')" :active="request()->routeIs('admin.claims.index')" class="text-black dark:text-gray-400">
                             {{ __('Manage Claims') }}
                         </x-nav-link>
                         <x-responsive-nav-link :href="route('admin.claims.history')" :active="request()->routeIs('admin.claims.history')" class="text-black dark:text-gray-400">
                             {{ __('Claim History') }}
                         </x-responsive-nav-link>
-        </div>
-
+        
+        @endcan
+        @can('user')
+         <x-responsive-nav-link :href="route('items.index')" :active="request()->routeIs('items.index')" class="text-black dark:text-gray-400">
+                        {{ __('Items') }}
+                    </x-responsive-nav-link>
+                      <x-responsive-nav-link :href="route('items.create')" :active="request()->routeIs('items.create')" class="text-black dark:text-gray-400">
+                        {{__('Add item') }}
+                     </x-responsive-nav-link>
+                    @endcan
+</div>
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
             <div class="px-4">

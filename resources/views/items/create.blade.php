@@ -6,6 +6,13 @@
     </x-slot>
 
     <div class="py-12">
+          <a href="{{ route('items.index') }}" 
+   class="inline-flex items-center group px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all duration-200">
+    <svg class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+    </svg>
+    Back 
+</a>
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white p-6 rounded-lg shadow-sm">
                 
@@ -39,7 +46,6 @@
                         <label class="block text-gray-700 font-bold mb-2">Category</label>
                         <select name="category" class="w-full border-gray-300 rounded-md shadow-sm">
                             <option value="Electronics">Electronics</option>
-                            <option value="Pets">Pets</option>
                             <option value="Documents">Documents/Wallets</option>
                             <option value="Others">Others</option>
                         </select>

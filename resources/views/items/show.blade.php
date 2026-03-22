@@ -1,111 +1,111 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Item Details: {{ $item->item_name }}
+        <div class="flex items-center justify-between">
+            <h2 class="font-bold text-2xl text-slate-800 dark:text-slate-100 leading-tight">
+                {{ __('Item Details') }}
             </h2>
-            <a href="{{ route('items.index') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                &larr; Back to List
+            <a href="{{ route('items.index') }}" 
+               class="inline-flex items-center text-sm font-semibold text-slate-500 hover:text-indigo-600 transition-colors group">
+                <svg class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                Back to List
             </a>
         </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+    <div class="py-10 bg-slate-50 dark:bg-gray-900 min-h-screen">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             
             @if(session('success'))
-                <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded shadow-sm">
-                    {{ session('success') }}
+                <div class="mb-6 flex items-center p-4 bg-emerald-50 border border-emerald-100 text-emerald-700 rounded-2xl shadow-sm">
+                    <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                    <p class="text-sm font-bold">{{ session('success') }}</p>
                 </div>
             @endif
 
-            <div class="bg-gradient-to-r from-blue-500 to-cyan-400 p-[1px] sm:rounded-lg shadow-sm overflow-hidden">
-                 <div class="bg-white p-6 sm:rounded-[calc(0.5rem-1px)]">
-                <div class="md:flex">
-                    <div class="md:w-1/2 bg-gray-100 flex items-center justify-center p-4">
+            <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] shadow-xl shadow-slate-200/60 dark:shadow-none overflow-hidden border border-slate-100 dark:border-gray-700">
+                <div class="flex flex-col lg:flex-row">
+                    
+                    <div class="lg:w-1/2 bg-slate-100 dark:bg-gray-900 flex items-center justify-center relative min-h-[400px]">
                         @if($item->image_path)
-                            <img src="{{ asset('storage/' . $item->image_path) }}" class="rounded-lg shadow-sm max-h-96 object-contain">
+                            <img src="{{ asset('storage/' . $item->image_path) }}" class="w-full h-full object-cover">
                         @else
-                            <div class="text-center py-20">
-                                <i class="fas fa-image text-gray-300 text-5xl mb-2"></i>
-                                <p class="text-gray-400 italic">No image available</p>
+                            <div class="flex flex-col items-center text-slate-400">
+                                <svg class="w-16 h-16 mb-4 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                <span class="font-medium italic">No Image Available</span>
                             </div>
                         @endif
+                        
+                        <div class="absolute top-6 left-6">
+                            <span class="px-4 py-1.5 text-xs font-black uppercase tracking-widest rounded-full shadow-lg {{ $item->type == 'lost' ? 'bg-rose-500 text-white' : 'bg-emerald-500 text-white' }}">
+                                {{ $item->type }}
+                            </span>
+                        </div>
                     </div>
 
-                    <div class="md:w-1/2 p-8">
-                        <div class="mb-4">
-                            <span class="text-xs font-bold uppercase px-2 py-1 rounded {{ $item->type == 'lost' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' }}">
-                                {{ strtoupper($item->type) }}
-                            </span>
-                            <span class="ml-2 text-sm text-gray-500">{{ $item->category }}</span>
+                    <div class="lg:w-1/2 p-8 lg:p-12">
+                        <div class="mb-6">
+                            <p class="text-indigo-600 dark:text-indigo-400 font-black text-xs uppercase tracking-[0.2em] mb-2">{{ $item->category }}</p>
+                            <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white leading-tight">{{ $item->item_name }}</h1>
                         </div>
 
-                        <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ $item->item_name }}</h1>
-                        
-                        <div class="space-y-4">
-                            <div>
-                                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Description</h3>
-                                <p class="mt-1 text-gray-700 leading-relaxed">{{ $item->description }}</p>
+                        <div class="grid grid-cols-2 gap-6 mb-8">
+                            <div class="col-span-2">
+                                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Description</h3>
+                                <p class="text-slate-600 dark:text-slate-300 leading-relaxed">{{ $item->description }}</p>
+                            </div>
+                            
+                            <div class="bg-slate-50 dark:bg-gray-700/50 p-4 rounded-2xl">
+                                <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Location</h3>
+                                <p class="text-sm font-bold text-slate-700 dark:text-slate-200 truncate">{{ $item->location }}</p>
                             </div>
 
-                            <div class="flex items-center text-gray-600">
-                                <i class="fas fa-map-marker-alt mr-2 text-blue-500"></i>
-                                <span><strong>Location:</strong> {{ $item->location }}</span>
-                            </div>
-
-                            <div class="flex items-center text-gray-600">
-                                <i class="fas fa-calendar-alt mr-2 text-blue-500"></i>
-                                <span><strong>Posted:</strong> {{ $item->created_at->format('M d, Y') }}</span>
+                            <div class="bg-slate-50 dark:bg-gray-700/50 p-4 rounded-2xl">
+                                <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Posted On</h3>
+                                <p class="text-sm font-bold text-slate-700 dark:text-slate-200">{{ $item->created_at->format('M d, Y') }}</p>
                             </div>
                         </div>
 
-                        <div class="mt-10 pt-6 border-t border-gray-100">
+                        <div class="mt-8 pt-8 border-t border-slate-100 dark:border-gray-700">
                             @if(auth()->id() !== $item->user_id)
                                 @php
-                                    // NEW: We fetch the whole claim record instead of just checking if it exists
-                                    $userClaim = \App\Models\Claim::where('item_id', $item->id)
-                                                                 ->where('user_id', auth()->id())
-                                                                 ->first();
+                                    $userClaim = \App\Models\Claim::where('item_id', $item->id)->where('user_id', auth()->id())->first();
                                 @endphp
 
                                 @if($userClaim)
                                     @if($userClaim->status === 'approved')
-                                        <div class="bg-green-50 p-4 rounded-lg border border-green-200 text-green-800 text-center shadow-sm">
-                                            <div class="flex items-center justify-center mb-1">
-                                                <i class="fas fa-check-circle text-xl mr-2"></i>
-                                                <span class="font-bold text-lg">Claim Approved!</span>
+                                        <div class="bg-emerald-50 dark:bg-emerald-900/20 p-5 rounded-2xl border border-emerald-100 dark:border-emerald-800 text-center">
+                                            <div class="flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-2">
+                                                <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                                                <span class="font-black">Claim Approved!</span>
                                             </div>
-                                            <p class="text-sm">The administrator has verified your claim. Please coordinate to retrieve your item.</p>
+                                            <p class="text-xs text-emerald-700 dark:text-emerald-300">The admin has verified your claim. Please coordinate retrieval.</p>
                                         </div>
-
                                     @elseif($userClaim->status === 'rejected')
-                                        <div class="bg-red-50 p-4 rounded-lg border border-red-200 text-red-800 text-center">
-                                            <i class="fas fa-times-circle mr-1 text-lg"></i> 
-                                            <span class="font-bold">Claim Not Approved.</span>
-                                            <p class="text-xs mt-1">Please contact the admin for more details.</p>
+                                        <div class="bg-rose-50 p-4 rounded-2xl border border-rose-100 text-rose-700 text-center text-sm font-bold">
+                                            Claim Not Approved
                                         </div>
-
                                     @else
-                                        <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200 text-yellow-800 text-center">
-                                            <i class="fas fa-clock mr-1"></i> Your claim is <strong>Pending</strong>.
-                                            <p class="text-xs mt-1 italic">An admin will review your request soon.</p>
+                                        <div class="bg-amber-50 p-5 rounded-2xl border border-amber-100 text-amber-800 text-center">
+                                            <p class="font-bold flex items-center justify-center">
+                                                <svg class="w-5 h-5 mr-2 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                                Claim Pending Review
+                                            </p>
                                         </div>
                                     @endif
                                 @else
                                     <form action="{{ route('items.claim', $item->id) }}" method="POST">
                                         @csrf
-                                        <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition shadow-lg transform active:scale-95">
-                                            <i class="fas fa-hand-paper mr-2"></i> I found this / This is mine
+                                        <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-4 px-6 rounded-2xl shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition transform active:scale-[0.98]">
+                                            This is Mine / I Found This
                                         </button>
-                                        <p class="text-center text-gray-500 text-[10px] mt-3 italic">
-                                            The owner will be notified of your claim.
+                                        <p class="text-center text-slate-400 text-[11px] mt-4 font-medium uppercase tracking-widest">
+                                            Verification will be required
                                         </p>
                                     </form>
                                 @endif
                             @else
-                                <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 text-blue-800 text-sm text-center">
-                                    <i class="fas fa-user-circle mr-1"></i> You posted this report. Manage claims in your dashboard.
+                                <div class="bg-indigo-50 dark:bg-indigo-900/20 p-5 rounded-2xl border border-indigo-100 dark:border-indigo-800 text-indigo-800 dark:text-indigo-300 text-sm text-center font-bold">
+                                    You posted this report.
                                 </div>
                             @endif
                         </div>
@@ -114,5 +114,4 @@
             </div>
         </div>
     </div>
-</div>
 </x-app-layout>

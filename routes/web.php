@@ -5,6 +5,8 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\Admin\ClaimController; // Import this for the admin routes
 use Illuminate\Support\Facades\Route;
 use App\Models\Item; 
+use App\Models\User;
+use App\Models\Claim;
 
 // Public Routes
 Route::get('/', function () {
@@ -35,6 +37,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::patch('/claims/{claim}', [ClaimController::class, 'update'])->name('claims.update');
         Route::get('/claims/history', [ClaimController::class, 'history'])->name('claims.history');
     });
+    // Admin dashboard monitoring report routes
+Route::get('/api/admin/stats', function (){
+    return response()->json([
+        'active' => Item::where('status','active')->count(),
+        'pending' => Claim::where('status','pending')->count(),
+        'resolved' => Claim::where('status','approved')->count(),
+        'users' => User::count(),
+    ]);
+})->middleware(['can.admin']);
 
     // 4. Profile Management
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

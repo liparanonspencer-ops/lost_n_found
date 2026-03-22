@@ -1,82 +1,97 @@
 <x-app-layout>
-    <x-slot name="header" class="border-l-4 border-blue-500">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Manage Claim Requests') }}
-        </h2>
+    <x-slot name="header">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h2 class="font-extrabold text-2xl text-slate-800 dark:text-white leading-tight">
+                    {{ __('Claim Requests') }}
+                </h2>
+                <p class="text-sm text-slate-500 mt-1 italic">Review and verify ownership claims</p>
+            </div>
+             <a href="{{ route('dashboard') }}" 
+               class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 transition-all group shadow-sm">
+                <svg class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                Admin dashboard
+            </a>
+            <div class="flex items-center space-x-2 bg-indigo-50 dark:bg-indigo-900/30 px-4 py-2 rounded-2xl border border-indigo-100 dark:border-indigo-800">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+                </span>
+                <span class="text-xs font-bold text-indigo-700 dark:text-indigo-300 tracking-wide uppercase">
+                    {{ $claims->count() }} Pending Review
+                </span>
+            </div>
+        </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="py-8 bg-slate-50 dark:bg-gray-900 min-h-screen">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             @if(session('success'))
-                <div class="mb-4 p-4 bg-green-100 border-l-4 border-green-500 text-green-700 shadow-sm">
-                    {{ session('success') }}
+                <div class="mb-6 flex items-center p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 rounded-2xl shadow-sm animate-fade-in-down">
+                    <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                    <span class="text-sm font-bold">{{ session('success') }}</span>
                 </div>
             @endif
 
-            <div class="bg-gradient-to-r from-blue-500 to-cyan-400 p-[1px] sm:rounded-lg shadow-sm overflow-hidden">
-                <div class="bg-white p-6 sm:rounded-[calc(0.5rem-1px)]">
-                    <div class="mb-6 flex justify-between items-end">
-                        <div>
-                            <h3 class="text-lg font-medium text-gray-900">Pending Requests</h3>
-                            <p class="text-sm text-gray-500">Review and verify claims. Approving one will close all other requests for that item.</p>
-                        </div>
-                        <span class="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">
-                            {{ $claims->count() }} Total Pending
-                        </span>
-                    </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-gray-50 border-b">
-                                    <th class="p-4 text-xs font-semibold uppercase text-gray-600 tracking-wider">Item Details</th>
-                                    <th class="p-4 text-xs font-semibold uppercase text-gray-600 tracking-wider">Claimant</th>
-                                    <th class="p-4 text-xs font-semibold uppercase text-gray-600 tracking-wider text-center">Submitted</th>
-                                    <th class="p-4 text-xs font-semibold uppercase text-gray-600 tracking-wider text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-100">
-                                @forelse($claims as $claim)
-                                    <tr class="hover:bg-gray-50 transition duration-150">
-                                        <td class="p-4">
-                                            <div class="flex items-center">
+            <div class="bg-white dark:bg-gray-800 rounded-[2rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-gray-700 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[800px]">
+                        <thead>
+                            <tr class="bg-slate-50/50 dark:bg-gray-700/50 border-b border-slate-100 dark:border-gray-700">
+                                <th class="p-6 text-[11px] font-black uppercase text-slate-400 tracking-[0.1em]">Item Details</th>
+                                <th class="p-6 text-[11px] font-black uppercase text-slate-400 tracking-[0.1em]">Claimant Info</th>
+                                <th class="p-6 text-[11px] font-black uppercase text-slate-400 tracking-[0.1em] text-center">Date Submitted</th>
+                                <th class="p-6 text-[11px] font-black uppercase text-slate-400 tracking-[0.1em] text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50 dark:divide-gray-700">
+                            @forelse($claims as $claim)
+                                <tr class="hover:bg-slate-50/80 dark:hover:bg-gray-700/30 transition duration-150 group">
+                                    <td class="p-6">
+                                        <div class="flex items-center">
+                                            <div class="relative w-12 h-12 shrink-0">
                                                 @if($claim->item->image_path)
-                                                    <img src="{{ asset('storage/' . $claim->item->image_path) }}" class="w-10 h-10 rounded-md object-cover mr-3 border border-gray-200 shadow-sm">
+                                                    <img src="{{ asset('storage/' . $claim->item->image_path) }}" class="w-full h-full rounded-xl object-cover ring-2 ring-slate-100 dark:ring-gray-700">
                                                 @else
-                                                    <div class="w-10 h-10 rounded-md bg-gray-100 flex items-center justify-center mr-3 border border-dashed border-gray-300">
-                                                        <i class="fas fa-box text-gray-300 text-xs"></i>
+                                                    <div class="w-full h-full rounded-xl bg-slate-100 dark:bg-gray-700 flex items-center justify-center border border-dashed border-slate-300">
+                                                        <i class="fas fa-box text-slate-300"></i>
                                                     </div>
                                                 @endif
-                                                <div>
-                                                    <div class="font-bold text-gray-800 leading-tight">{{ $claim->item->item_name }}</div>
-                                                    <div class="flex items-center text-[10px] text-gray-500 mt-1">
-                                                        <i class="fas fa-map-marker-alt mr-1 text-blue-400"></i> {{ $claim->item->location }}
-                                                    </div>
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="font-bold text-slate-900 dark:text-white leading-tight group-hover:text-indigo-600 transition-colors">{{ $claim->item->item_name }}</div>
+                                                <div class="flex items-center text-[11px] text-slate-500 mt-1">
+                                                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+                                                    {{ $claim->item->location }}
                                                 </div>
                                             </div>
-                                        </td>
+                                        </div>
+                                    </td>
 
-                                        <td class="p-4">
-                                            <div class="text-sm font-medium text-gray-900">{{ $claim->user->first_name }} {{ $claim->user->last_name }}</div>
-                                            <div class="text-[10px] text-gray-500 italic">{{ $claim->user->email }}</div>
-                                            <div class="text-[10px] text-gray-400 font-mono">{{ $claim->user->address }}</div>
-                                        </td>
+                                    <td class="p-6">
+                                        <div class="text-sm font-bold text-slate-800 dark:text-slate-200">{{ $claim->user->first_name }} {{ $claim->user->last_name }}</div>
+                                        <div class="text-[11px] text-slate-500 font-medium flex items-center mt-0.5">
+                                            <svg class="w-3 h-3 mr-1 opacity-60" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
+                                            {{ $claim->user->email }}
+                                        </div>
+                                    </td>
 
-                                        <td class="p-4 text-center">
-                                            <div class="text-sm text-gray-600 font-medium">{{ $claim->created_at->format('M d, Y') }}</div>
-                                            <div class="text-[10px] text-gray-400">{{ $claim->created_at->diffForHumans() }}</div>
-                                        </td>
+                                    <td class="p-6 text-center">
+                                        <div class="text-sm font-bold text-slate-700 dark:text-slate-300">{{ $claim->created_at->format('M d, Y') }}</div>
+                                        <div class="text-[10px] text-slate-400 font-medium">{{ $claim->created_at->diffForHumans() }}</div>
+                                    </td>
 
-                                        <td class="p-4 text-right space-x-1 whitespace-nowrap">
+                                    <td class="p-6 text-right">
+                                        <div class="flex justify-end items-center gap-2">
                                             @if($claim->status === 'pending')
                                                 <form id="approve-form-{{ $claim->id }}" action="{{ route('admin.claims.update', $claim) }}" method="POST" class="inline">
                                                     @csrf @method('PATCH')
                                                     <input type="hidden" name="status" value="approved">
                                                     <button type="button" 
                                                         onclick="openConfirmModal('approve-form-{{ $claim->id }}', 'approve')"
-                                                        class="inline-flex items-center bg-green-600 text-white px-3 py-1.5 rounded text-xs font-bold hover:bg-green-700 transition shadow-sm">
-                                                        <i class="fas fa-check mr-1.5"></i> Approve
+                                                        class="h-9 px-4 bg-emerald-600 text-white text-xs font-bold rounded-xl shadow-lg shadow-emerald-100 dark:shadow-none hover:bg-emerald-700 transition active:scale-95">
+                                                        Approve
                                                     </button>
                                                 </form>
 
@@ -85,94 +100,59 @@
                                                     <input type="hidden" name="status" value="rejected">
                                                     <button type="button" 
                                                         onclick="openConfirmModal('reject-form-{{ $claim->id }}', 'reject')"
-                                                        class="inline-flex items-center bg-white border border-red-200 text-red-600 px-3 py-1.5 rounded text-xs font-bold hover:bg-red-50 transition">
-                                                        <i class="fas fa-times mr-1.5"></i> Reject
+                                                        class="h-9 px-4 bg-white dark:bg-gray-700 border border-slate-200 dark:border-gray-600 text-rose-600 dark:text-rose-400 text-xs font-bold rounded-xl hover:bg-rose-50 dark:hover:bg-rose-900/20 transition active:scale-95">
+                                                        Reject
                                                     </button>
                                                 </form>
                                             @else
-                                                <span class="text-[10px] font-bold uppercase px-2 py-1 rounded bg-gray-100 text-gray-400">Processed</span>
+                                                <span class="px-3 py-1 bg-slate-100 dark:bg-gray-700 text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest rounded-lg">
+                                                    Archived
+                                                </span>
                                             @endif
-                                        </td>
-                                    </tr>
-                                @empty
-                                    @endforelse
-                            </tbody>
-                        </table>
-                    </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="py-20 text-center">
+                                        <div class="flex flex-col items-center">
+                                            <div class="w-16 h-16 bg-slate-50 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
+                                                <i class="fas fa-inbox text-slate-300 text-2xl"></i>
+                                            </div>
+                                            <p class="text-slate-500 dark:text-slate-400 font-bold">All clear! No pending claims.</p>
+                                        </div>
+                                    </td>
+                                @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="confirmationModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="flex min-h-screen items-center justify-center p-4 text-center sm:p-0">
-            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onclick="closeModal()"></div>
+    <div id="confirmationModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
 
-            <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                    <div class="sm:flex sm:items-start">
-                        <div id="modalIconContainer" class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full sm:mx-0 sm:h-10 sm:w-10">
-                            <i id="modalIcon" class="fas"></i>
+        <div class="flex min-h-screen items-end sm:items-center justify-center p-0 sm:p-4 text-center">
+            <div class="relative transform overflow-hidden rounded-t-[2.5rem] sm:rounded-[2rem] bg-white dark:bg-gray-800 text-left shadow-2xl transition-all w-full sm:max-w-lg animate-fade-in-up">
+                <div class="p-8">
+                    <div class="flex flex-col items-center text-center">
+                        <div id="modalIconContainer" class="flex h-20 w-20 items-center justify-center rounded-3xl mb-6">
+                            <i id="modalIcon" class="fas text-2xl"></i>
                         </div>
-                        <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                            <h3 class="text-lg font-bold leading-6 text-gray-900" id="modal-title">Confirm Action</h3>
-                            <div class="mt-2">
-                                <p class="text-sm text-gray-500" id="modalDescription"></p>
-                            </div>
-                        </div>
+                        <h3 class="text-2xl font-black text-slate-900 dark:text-white" id="modal-title">Confirm Action</h3>
+                        <p class="mt-4 text-slate-500 dark:text-slate-400 leading-relaxed text-sm" id="modalDescription"></p>
                     </div>
                 </div>
-                <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                    <button type="button" id="confirmBtn" class="inline-flex w-full justify-center rounded-md px-4 py-2 text-sm font-bold text-white shadow-sm sm:ml-3 sm:w-auto">
+                <div class="p-8 pt-0 flex flex-col sm:flex-row-reverse gap-3">
+                    <button type="button" id="confirmBtn" class="w-full sm:flex-1 py-4 px-6 rounded-2xl text-white font-bold text-sm shadow-xl transition active:scale-95">
                         Confirm
                     </button>
-                    <button type="button" onclick="closeModal()" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">
+                    <button type="button" onclick="closeModal()" class="w-full sm:flex-1 py-4 px-6 rounded-2xl bg-slate-100 dark:bg-gray-700 text-slate-600 dark:text-slate-300 font-bold text-sm hover:bg-slate-200 transition">
                         Cancel
                     </button>
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-        let activeFormId = null;
-
-        function openConfirmModal(formId, type) {
-            activeFormId = formId;
-            const modal = document.getElementById('confirmationModal');
-            const title = document.getElementById('modal-title');
-            const desc = document.getElementById('modalDescription');
-            const iconContainer = document.getElementById('modalIconContainer');
-            const icon = document.getElementById('modalIcon');
-            const confirmBtn = document.getElementById('confirmBtn');
-
-            if (type === 'approve') {
-                title.innerText = 'Approve This Claim?';
-                desc.innerText = 'By approving, this item will be marked as resolved. All other pending claims for this item will be automatically rejected.';
-                iconContainer.className = 'mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10';
-                icon.className = 'fas fa-check-circle text-green-600';
-                confirmBtn.className = 'inline-flex w-full justify-center rounded-md bg-green-600 px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-green-700 sm:ml-3 sm:w-auto';
-            } else {
-                title.innerText = 'Reject This Claim?';
-                desc.innerText = 'Are you sure you want to reject this request? This user will be notified that their claim was unsuccessful.';
-                iconContainer.className = 'mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10';
-                icon.className = 'fas fa-exclamation-triangle text-red-600';
-                confirmBtn.className = 'inline-flex w-full justify-center rounded-md bg-red-600 px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-red-700 sm:ml-3 sm:w-auto';
-            }
-
-            modal.classList.remove('hidden');
-
-            confirmBtn.onclick = function() {
-                // Optional: Show loading state on button
-                confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
-                confirmBtn.disabled = true;
-                document.getElementById(activeFormId).submit();
-            };
-        }
-
-        function closeModal() {
-            document.getElementById('confirmationModal').classList.add('hidden');
-            activeFormId = null;
-        }
-    </script>
 </x-app-layout>
