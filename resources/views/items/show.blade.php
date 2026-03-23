@@ -57,13 +57,25 @@
                                 <p class="text-slate-600 dark:text-slate-300 leading-relaxed">{{ $item->description }}</p>
                             </div>
 
-                             <div class="font-bold absolute bottom-25 right-12">
-                                <span class="border border-emerald-700 animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 px-3 py-1 text-[12px] font-black uppercase tracking-tighter rounded-full shadow-sm {{ $item->status == 'lost' ? 'bg-rose-500 text-white' : 'bg-emerald-500 text-white' }}">
-                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                            </span>
-                                    {{ $item->status }}
-                                </span>
-                            </div>
+                            <div class="font-bold absolute bottom-25 right-12">
+    {{-- Main Badge Container --}}
+    <span class="relative inline-flex items-center px-3 py-1 text-[12px] font-black uppercase tracking-tighter rounded-full shadow-sm border 
+        {{ $item->status == 'available' ? 'bg-emerald-500 text-white border-emerald-700' : 'bg-rose-500 text-white border-rose-700' }}">
+        
+        {{-- Only show the pinging animation if the item is still available --}}
+        @if($item->status == 'available')
+            <span class="animate-ping absolute inset-0 rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-white mr-2"></span>
+        @else
+            {{-- Static dot for unavailable/claimed status --}}
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-200 mr-2"></span>
+        @endif
+
+        <span class="relative">
+            {{ $item->status }}
+        </span>
+    </span>
+</div>
 
                             
                             <div class="bg-slate-50 dark:bg-gray-700/50 p-4 rounded-2xl">
