@@ -11,7 +11,7 @@ use App\Models\Claim;
 use App\Http\Controllers\UserClaimController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SettingsController;
-
+use App\Http\Controllers\DashboardController;
 // Public Routes
 Route::get('/', function () {
     return view('welcome');
@@ -21,13 +21,9 @@ Route::get('/', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     
     // 1. Dashboard
-    Route::get('/dashboard', function () {
-        $items = Item::latest()->take(6)->get(); 
-        return view('dashboard', compact('items'));
-    })->name('dashboard');
-
-    // --- NOTIFICATION ROUTES ---
-   
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+ 
+    // --- NOTIFICATION ROUTES ---  
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
 

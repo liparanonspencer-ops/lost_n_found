@@ -30,6 +30,6 @@ class SettingsController extends Controller
 
         $user->update($data);
 
-        return back()->with('success', 'Settings updated successfully!');
+        return view('dashboard', ['user' => Auth::user()]);
     }
 }

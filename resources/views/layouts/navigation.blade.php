@@ -98,6 +98,9 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('settings.edit')" :active="request()->routeIs('settings.edit')">
+                {{ __('Settings') }}
+            </x-responsive-nav-link>
 
             <x-responsive-nav-link :href="route('notifications.index')" :active="request()->routeIs('notifications.index')">
                 {{ __('Notifications') }} 
