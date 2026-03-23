@@ -9,6 +9,12 @@
                      <x-nav-link :href="route('items.index')" :active="request()->routeIs('items.index')" class="text-black dark:text-gray-400">
                         {{ __('Items') }}
                     </x-nav-link>
+                     <x-nav-link :href="route('notifications.index')" :active="request()->routeIs('notifications.index')" class="text-black dark:text-gray-400">
+                        {{ __('Notifications') }}
+                    </x-nav-link>
+                     <x-nav-link :href="route('settings.edit')" :active="request()->routeIs('settings.edit')" class="text-black dark:text-gray-400">
+                        {{ __('Settings') }}
+                    </x-nav-link>
 
                     @can('admin')
                         <x-nav-link :href="route('admin.claims.index')" :active="request()->routeIs('admin.claims.index')" class="text-black dark:text-gray-400">

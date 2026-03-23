@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="{{ Auth::user()->theme_preference === 'dark' ? 'dark' : '' }}">
+
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,6 +14,20 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        <script>
+        // This function toggles the 'dark' class on the <html> element
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                document.getElementById('theme-input').value = 'light';
+            } else {
+                html.classList.add('dark');
+                document.getElementById('theme-input').value = 'dark';
+            }
+        }
+    </script>
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-zinc-100 dark:bg-gray-900">
@@ -25,7 +40,12 @@
                         @yield('header')
                     </div>
                 </header>
-           
+           <!-- Settings -->
+                @if(session('success'))
+             <div class="fixed bottom-10 right-10 bg-emerald-500 text-white px-6 py-4 rounded-2xl shadow-2xl z-50 animate-bounce">
+                <i class="fas fa-check-circle mr-2"></i> {{ session('success') }}
+            </div>
+                @endif
 
             <!-- Page Content -->
             <main>

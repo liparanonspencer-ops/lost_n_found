@@ -10,6 +10,8 @@ use App\Models\User;
 use App\Models\Claim;
 use App\Http\Controllers\UserClaimController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\SettingsController;
+
 // Public Routes
 Route::get('/', function () {
     return view('welcome');
@@ -72,6 +74,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile/users', function() {
         return redirect()->route('admin.users.index');
     })->name('profile.users.usersindex');
+    // 5.Settings routes
+    Route::middleware(['auth'])->group(function () {
+    Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');
+    Route::patch('/settings', [SettingsController::class, 'update'])->name('settings.update');
+});
+
 });
 
 require __DIR__.'/auth.php';

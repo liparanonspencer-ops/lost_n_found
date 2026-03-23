@@ -35,10 +35,10 @@ class ClaimStatusNotification extends Notification
             ->subject($isApproved ? 'Claim Approved!' : 'Claim Update')
             ->line("Hello {$notifiable->first_name},")
             ->line($isApproved 
-                ? "Your claim for '{$this->claim->item->item_name}' has been approved." 
+                ? "Your claim for '{$this->claim->item->item_name}' has been approved. Please print or scan the QR-code's admin provided." 
                 : "Your claim for '{$this->claim->item->item_name}' was not approved.")
             ->action('View Details', route('dashboard'))
-            ->line('Thank you for using our Lost and Found system!');
+            ->line('Thank you for using STI Lost and Found system!');
     }
 
     public function toArray($notifiable)
