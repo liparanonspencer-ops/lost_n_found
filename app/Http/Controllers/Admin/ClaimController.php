@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Claim;
 use App\Models\Item;
+use App\Notifications\ClaimStatusNotification; // 1. Import the Notification
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -30,10 +31,6 @@ class ClaimController extends Controller
         return view('admin.claims.history', compact('claims'));
     }
 
-    /**
-     * This is the ONLY method you need for updating status.
-     * It handles Approval, Item status change, and Auto-rejections.
-     */
     public function update(Request $request, Claim $claim)
     {
         $request->validate([
@@ -41,30 +38,42 @@ class ClaimController extends Controller
         ]);
 
         DB::transaction(function () use ($request, $claim) {
-            // 1. Update the specific claim status (e.g., 'approved')
+            // 2. Update the specific claim status
             $claim->update([
                 'status' => $request->status
             ]);
 
-            // 2. If approved, update the Item and reject others
+            // 3. Notify the specific claimant (Manual action)
+            $claim->user->notify(new ClaimStatusNotification($claim, $request->status));
+
+            // 4. If approved, update the Item and reject others
             if (strtolower($request->status) === 'approved' && $claim->item) {
                 
-                // Change Item status to 'not available'
                 $claim->item->update([
                     'status' => 'not available' 
                 ]);
 
-                // Auto-reject other pending claims for this specific item
-                Claim::where('item_id', $claim->item_id)
+                // 5. Handle Auto-rejections for other users
+                $otherClaims = Claim::where('item_id', $claim->item_id)
                     ->where('id', '!=', $claim->id)
                     ->where('status', 'pending')
-                    ->update(['status' => 'rejected']);
+                    ->get();
+
+                foreach ($otherClaims as $otherClaim) {
+                    $otherClaim->update(['status' => 'rejected']);
                     
-                // Refresh the item in the current request memory
+                    // Notify other users that they were rejected because the item is gone
+                    $otherClaim->user->notify(new ClaimStatusNotification($otherClaim, 'rejected'));
+                }
+                    
                 $claim->item->refresh();
             }
         });
 
-        return back()->with('success', 'Process completed! Item is now marked as not available.');
+        $message = $request->status === 'approved' 
+            ? 'Claim approved and others auto-rejected.' 
+            : 'Claim has been rejected.';
+
+        return back()->with('success', $message);
     }
 }

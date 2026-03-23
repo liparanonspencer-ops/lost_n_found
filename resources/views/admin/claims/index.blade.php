@@ -1,5 +1,5 @@
-<x-app-layout>
-    <x-slot name="header">
+@extends('layouts.app')
+@section('header')
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
                 <h2 class="font-extrabold text-2xl text-slate-800 dark:text-white leading-tight">
@@ -17,8 +17,8 @@
                 </span>
             </div>
         </div>
-    </x-slot>
-
+    @endsection
+  @section('content')
     <div class="py-8 bg-slate-50 dark:bg-gray-900 min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
@@ -191,4 +191,4 @@
             activeFormId = null;
         }
     </script>
-</x-app-layout>
+@endsection

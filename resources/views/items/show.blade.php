@@ -1,5 +1,5 @@
-<x-app-layout>
-    <x-slot name="header">
+@extends('layouts.app')
+@section('header')
         <div class="flex items-center justify-between">
             <h2 class="font-bold text-2xl text-slate-800 dark:text-slate-100 leading-tight">
                 {{ __('Item Details') }}
@@ -10,8 +10,8 @@
                 Back to List
             </a>
         </div>
-    </x-slot>
-
+    @endsection
+    @section('content')
     <div class="py-10 bg-slate-50 dark:bg-gray-900 min-h-screen">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             
@@ -154,4 +154,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection

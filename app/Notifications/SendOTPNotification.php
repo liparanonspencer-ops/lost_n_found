@@ -28,7 +28,7 @@ class SendOTPNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail','database'];
     }
 
     /**
@@ -37,7 +37,7 @@ class SendOTPNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->subject('Your Registration OTP')
+                    ->subject('Your OTP')
                     ->line('Your verification code is: ' . $this->otp)
                     ->line('This code will expire in 10 minutes.')
                     ->line('Thank you for using our application!');
@@ -51,7 +51,12 @@ class SendOTPNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            //
+        'title' => 'Security Verification',
+        'otp' => $this->otp,
+        'type' => 'registration_otp',
+        'message' => 'Your verification code is: ' . $this->otp,
+        'icon' => 'fas fa-key', // Example FontAwesome icon
+        'url' => '/verify-account', // Where the user should go when they click it
         ];
     }
 }

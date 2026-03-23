@@ -1,10 +1,10 @@
-<x-app-layout>
-    <x-slot name="header">
+@extends('layouts.app')
+@section('header')
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Report Lost or Found Item
         </h2>
-    </x-slot>
-
+    @endsection
+    @section('content')
     <div class="py-12">
           <a href="{{ route('items.index') }}" 
    class="inline-flex items-center group px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all duration-200">
@@ -76,4 +76,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection

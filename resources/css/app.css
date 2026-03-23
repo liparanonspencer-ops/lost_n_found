@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* Custom Responsive Utilities */
+@media (max-width: 639.98px) {
+    /* Stack action buttons vertically on very small mobile screens */
+    .gap-x-2 {
+        display: flex;
+        flex-direction: column;
+        gap: 10px 0;
+    }
+    .flex-auto form {
+        width: 100%;
+    }
+    .flex-auto form button {
+        width: 100%;
+        justify-content: center;
+    }
+}

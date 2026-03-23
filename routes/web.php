@@ -9,7 +9,7 @@ use App\Models\Item;
 use App\Models\User;
 use App\Models\Claim;
 use App\Http\Controllers\UserClaimController;
-
+use App\Http\Controllers\NotificationController;
 // Public Routes
 Route::get('/', function () {
     return view('welcome');
@@ -23,6 +23,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $items = Item::latest()->take(6)->get(); 
         return view('dashboard', compact('items'));
     })->name('dashboard');
+
+    // --- NOTIFICATION ROUTES ---
+   
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+
 
     // 2. Items System
     Route::get('/items', [ItemController::class, 'index'])->name('items.index');
