@@ -9,7 +9,7 @@ class DashboardController extends Controller
     public function index()
     {
         // Fetch the 6 latest items
-       $items = \App\Models\Item::with('user')->latest()->get();
+       $items =Item::with('user')->latest()->get();
 
 
         return view('dashboard', compact('items'));

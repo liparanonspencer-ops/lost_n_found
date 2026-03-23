@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Claim;
 use App\Models\Item;
-use App\Notifications\ClaimStatusNotification; // 1. Import the Notification
+use App\Notifications\ClaimStatusNotification; 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
