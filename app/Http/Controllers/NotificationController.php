@@ -22,4 +22,10 @@ class NotificationController extends Controller
 
         return back()->with('success', 'Notification marked as read.');
     }
+    public function markAllRead() 
+    {
+        auth()->user()->unreadNotifications->markAsRead();
+
+        return back()->with('success', 'All notifications cleared!');
+}
 }

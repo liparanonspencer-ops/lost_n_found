@@ -14,11 +14,13 @@ class SettingsController extends Controller
     public function update(Request $request)
     {
         $user = Auth::user();
+
+        $user->update([
+            'show_phone_publicly' => $request->has('show_phone_publicly'),
+            'phone' => $request->phone,
+        ]);
         
         $data = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'phone_number' => 'nullable|string|max:20',
             'email_notifications' => 'boolean',
             'show_phone_publicly' => 'boolean',
             'theme_preference' => 'required|in:light,dark',
@@ -29,6 +31,6 @@ class SettingsController extends Controller
         $data['show_phone_publicly'] = $request->has('show_phone_publicly');
 
         $user->update($data);
-return redirect()->route('dashboard');
+        return redirect()->route('dashboard');
     }
 }

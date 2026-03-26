@@ -27,6 +27,7 @@ class UserController extends Controller
             'first_name' => ['required', 'string', 'max:255'],
             'last_name'  => ['required', 'string', 'max:255'],
             'address' => ['required', 'string', 'max:255'],
+            'profile_photo' => ['required', 'string', 'max:255'],
             'email'      => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email,' . $user->id],
         ]);
 

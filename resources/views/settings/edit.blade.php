@@ -8,31 +8,6 @@
         <form action="{{ route('settings.update') }}" method="POST">
             @csrf
             @method('PATCH')
-
-            {{-- Section 1: Profile --}}
-            <div class="bg-white dark:bg-gray-800 rounded-[2rem] shadow-sm border border-slate-100 dark:border-gray-700 overflow-hidden mb-6 transition-colors">
-                <div class="p-8">
-                    <h2 class="text-lg font-bold text-slate-800 dark:text-white mb-6 flex items-center transition-colors">
-                        <i class="fas fa-user-circle mr-3 text-indigo-500"></i> Public Profile
-                    </h2>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-xs font-black uppercase tracking-widest text-slate-400 mb-2">First Name</label>
-                            <input type="text" name="first_name" value="{{ $user->first_name }}" class="w-full rounded-xl border-slate-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-black uppercase tracking-widest text-slate-400 mb-2">Last Name</label>
-                            <input type="text" name="last_name" value="{{ $user->last_name }}" class="w-full rounded-xl border-slate-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500">
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-xs font-black uppercase tracking-widest text-slate-400 mb-2">Phone Number</label>
-                            <input type="text" name="phone_number" value="{{ $user->phone_number }}" placeholder="e.g. 0912 345 6789" class="w-full rounded-xl border-slate-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             {{-- Section 2: Preferences --}}
             <div class="bg-white dark:bg-gray-800 rounded-[2rem] shadow-sm border border-slate-100 dark:border-gray-700 overflow-hidden mb-8 transition-colors">
                 <div class="p-8">

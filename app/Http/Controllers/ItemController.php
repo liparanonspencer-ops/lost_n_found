@@ -3,20 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item; 
-use App\Models\Claim; // Added Claim import
+use App\Models\Claim; 
 use Illuminate\Http\Request;
 
 class ItemController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Item::query();
+        $query = Item::with('user')->where('is_resolved', false);
 
-        // STEP 5: Only show items that are NOT resolved by default
-        // This keeps your feed clean of already-found items
-        $query->where('is_resolved', false);
-
-        if ($request->has('search')) {
+        if ($request->filled('search')) {
             $search = $request->get('search');
             $query->where(function($q) use ($search) {
                 $q->where('item_name', 'like', "%{$search}%")
@@ -25,20 +21,26 @@ class ItemController extends Controller
             });
         }
 
-        $items = $query->latest()->paginate(12);
+        $items = $query->latest()->limit(4)->get();
         return view('items.index', compact('items'));
     }
 
     public function show(Item $item)
-    {
+    { 
+        $item->load('user');
         return view('items.show', compact('item'));
     }
 
     public function claim(Request $request, Item $item)
     {
-        // STEP 3 LOGIC: Prevent claiming if the item is already resolved/claimed
+        // Prevent claiming resolved items
         if ($item->is_resolved || $item->status === 'claimed') {
             return back()->with('error', 'This item has already been successfully claimed.');
+        }
+
+        // Require login
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('error', 'Please login first.');
         }
 
         // Prevent owner from claiming their own item
@@ -46,21 +48,21 @@ class ItemController extends Controller
             return back()->with('error', 'You cannot claim your own item.');
         }
 
-        // Prevent double-claiming by the same user
-        $existingClaim = Claim::where('item_id', $item->id)
-                             ->where('user_id', auth()->id())
-                             ->first();
-                             
-        if ($existingClaim) {
+        // Prevent duplicate claims
+        $exists = Claim::where('item_id', $item->id)
+                       ->where('user_id', auth()->id())
+                       ->exists();
+
+        if ($exists) {
             return back()->with('error', 'You have already submitted a claim for this item.');
         }
 
-        // Create the claim
+        // Create claim
         Claim::create([
             'item_id' => $item->id,
             'user_id' => auth()->id(),
-            'message' => 'I would like to claim this item.',
-            'status'  => 'pending', // Explicitly set starting status
+            'message' => $request->input('message', 'I would like to claim this item.'),
+            'status'  => 'pending',
         ]);
 
         return back()->with('success', 'Claim submitted successfully! The admin will review it.');
@@ -84,8 +86,8 @@ class ItemController extends Controller
         $item->type        = $request->type;
         $item->category    = $request->category;
         $item->location    = $request->location;
-        $item->status      = 'available'; // Set initial status
-        $item->is_resolved = false;       // Set initial resolved state
+        $item->status      = 'available';
+        $item->is_resolved = false;
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('items', 'public');
@@ -96,20 +98,51 @@ class ItemController extends Controller
 
         return redirect()->route('items.index')->with('success', 'Item reported successfully!');
     }
-   public function create()
+
+    public function create()
     {
         return view('items.create');
     }
 
-   public function verifyClaim($id)
-{
-    $item = Item::findOrFail($id);
+    /**
+     * 🔥 MAIN CLAIM APPROVAL SYSTEM (MATCHES YOUR BLADE)
+     */
+    public function update(Request $request, Claim $claim)
+    {
+        $request->validate([
+            'status' => 'required|in:approved,rejected',
+        ]);
 
-    // Update the status to 'returned' or 'claimed'
-    $item->status = 'claimed';
-    $item->save();
+        $item = $claim->item;
 
-    // Redirect with a success message
-    return redirect('/dashboard')->with('success', 'Item #' . $id . ' has been successfully claimed!');
-}
+        // Prevent approving already resolved items
+        if ($item->is_resolved && $request->status === 'approved') {
+            return back()->with('error', 'Item already resolved.');
+        }
+
+        if ($request->status === 'approved') {
+
+            // 1. Approve selected claim
+            $claim->status = 'approved';
+            $claim->save();
+
+            // 2. Reject all other claims
+            Claim::where('item_id', $item->id)
+                ->where('id', '!=', $claim->id)
+                ->update(['status' => 'rejected']);
+
+            // 3. Mark item as claimed/resolved
+            $item->update([
+                'status' => 'claimed',
+                'is_resolved' => true,
+            ]);
+
+        } else {
+            // Reject only this claim
+            $claim->status = 'rejected';
+            $claim->save();
+        }
+
+        return back()->with('success', 'Claim updated successfully!');
+    }
 }

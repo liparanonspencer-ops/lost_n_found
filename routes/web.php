@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\Admin\ClaimController;
-use App\Http\Controllers\Admin\UserController; // Import the new Admin UserController
+use App\Http\Controllers\Admin\UserController; 
 use Illuminate\Support\Facades\Route;
 use App\Models\Item; 
 use App\Models\User;
@@ -12,6 +12,7 @@ use App\Http\Controllers\UserClaimController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\DashboardController;
+
 // Public Routes
 Route::get('/', function () {
     return view('welcome');
@@ -26,8 +27,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // --- NOTIFICATION ROUTES ---  
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
-
-
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
     // 2. Items System
     Route::get('/items', [ItemController::class, 'index'])->name('items.index');
     Route::get('/items/create', [ItemController::class, 'create'])->name('items.create');
@@ -36,6 +36,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('search/items/{items}',[ItemController::class, 'search'])->name('items.search');
     
     Route::post('/claims', [UserClaimController::class, 'store'])->name('claims.store');
+
+    // --- UPDATED: USER PRINTING & ADS SYSTEM ---
+    // We added 'admin.' to the view path because that is where your files are located
+    Route::get('/claims/{claim}/ads', function (Claim $claim) {
+        return view('admin.claims.ads', compact('claim'));
+    })->name('claims.ads');
+
+    Route::get('/claims/{claim}/print', function (Claim $claim) {
+        return view('admin.claims.print', compact('claim'));
+    })->name('claims.print');
 
   
     // 3. Admin Only Routes (Role Check)
@@ -70,11 +80,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile/users', function() {
         return redirect()->route('admin.users.index');
     })->name('profile.users.usersindex');
-    // 5.Settings routes
-    Route::middleware(['auth'])->group(function () {
+
+    // 5. Settings routes
     Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');
     Route::patch('/settings', [SettingsController::class, 'update'])->name('settings.update');
-});
 
 });
 

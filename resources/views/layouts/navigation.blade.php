@@ -12,9 +12,7 @@
                      <x-nav-link :href="route('notifications.index')" :active="request()->routeIs('notifications.index')" class="text-black dark:text-gray-400">
                         {{ __('Notifications') }}
                     </x-nav-link>
-                     <x-nav-link :href="route('settings.edit')" :active="request()->routeIs('settings.edit')" class="text-black dark:text-gray-400">
-                        {{ __('Settings') }}
-                    </x-nav-link>
+                     
 
                     @can('admin')
                         <x-nav-link :href="route('admin.claims.index')" :active="request()->routeIs('admin.claims.index')" class="text-black dark:text-gray-400">
@@ -33,7 +31,15 @@
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ms-6 space-x-4">
-                
+                <div class="photo-section">
+           @if(Auth::user()->profile_photo)
+                    <div class="flex-shrink-0 me-2">
+                        <img src="{{ asset('storage/' . Auth::user()->profile_photo) }}" 
+                             alt="Profile" 
+                             class="h-10 w-10 rounded-full object-cover border border-gray-300 dark:border-gray-600">
+                       </div>
+                @endif
+           </div>
                 <a href="{{ route('notifications.index') }}" class="relative p-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 transition duration-150">
                     <i class="fas fa-bell text-xl"></i>
                     @if(auth()->user()->unreadNotifications->count() > 0)
@@ -59,6 +65,9 @@
                     </x-slot>
 
                     <x-slot name="content">
+                        <x-dropdown-link :href="route('settings.edit')">
+                        {{ __('Settings') }}
+                    </x-dropdown-link>
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
@@ -98,14 +107,11 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('settings.edit')" :active="request()->routeIs('settings.edit')">
-                {{ __('Settings') }}
-            </x-responsive-nav-link>
-
+      
             <x-responsive-nav-link :href="route('notifications.index')" :active="request()->routeIs('notifications.index')">
                 {{ __('Notifications') }} 
                 @if(auth()->user()->unreadNotifications->count() > 0)
-                    <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                    <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-400 text-red-800 shadow-sm animate-pulse">
                         {{ auth()->user()->unreadNotifications->count() }} new
                     </span>
                 @endif
@@ -135,6 +141,9 @@
                 <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
             </div>
             <div class="mt-3 space-y-1">
+                <x-responsive-nav-link :href="route('settings.edit')">
+                    {{ __('Settings') }}
+                </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
