@@ -22,11 +22,7 @@
                             {{ __('Claim History') }}
                         </x-nav-link>
                     @endcan
-                    @can('user')
-                     <x-nav-link :href="route('items.create')" :active="request()->routeIs('items.create')" class="text-black dark:text-gray-400">
-                        {{__('Add item') }}
-                     </x-nav-link>
-                     @endcan
+                   
                 </div>
             </div>
 

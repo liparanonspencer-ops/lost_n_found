@@ -6,12 +6,20 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index()
+   public function index(Request $request)
     {
-        // Fetch the 6 latest items
-       $items =Item::with('user')->latest()->get();
+        $query = Item::with('user')->where('is_resolved', false);
 
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where(function($q) use ($search) {
+                $q->where('item_name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhere('category', 'like', "%{$search}%");
+            });
+        }
 
-        return view('dashboard', compact('items'));
+        $items = $query->latest()->limit(4)->get();
+        return view('items.index', compact('items'));
     }
 }
