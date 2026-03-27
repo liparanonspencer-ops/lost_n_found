@@ -17,7 +17,7 @@
     @section('content')
     <div class="py-8 bg-slate-50 dark:bg-gray-900 min-h-screen text-slate-900 dark:text-slate-100 font-sans">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
+           
             {{-- ADMIN SECTION: Stats & Management --}}
             @can('admin')
             <div class="mb-12" 
@@ -44,7 +44,7 @@
                         <p class="text-sm text-slate-500 font-medium">Statistics live platform activity...</p>
                     </div>
                 </div>
-
+             
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     <a href="{{ route('items.index') }}" class="block transition-transform hover:scale-[1.02] bg-emerald-500 dark:bg-gray-800 p-6 rounded-[2rem] shadow-xl border border-slate-100 dark:border-gray-700">
                         <div class="flex items-center justify-between mb-4">
@@ -95,7 +95,7 @@
             @endcan
 
             {{-- USER SECTION: Combined Slider & Description --}}
-            @can('user')
+            @if(auth()->user()->role === 'admin' || auth()->user()->role === 'user')
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12 bg-white dark:bg-gray-800 rounded-[3rem] p-4 shadow-2xl shadow-slate-200 dark:shadow-none border border-slate-100 dark:border-gray-700 overflow-hidden">
                 
@@ -234,7 +234,7 @@
                     </div>
                 </div>
             </div>
-            @endcan
+            @endif
             {{-- Footer Trust Badge --}}
         <div class="mt-8 text-center">
             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">

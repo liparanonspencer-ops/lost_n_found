@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 class DashboardController extends Controller
 {
    public function index(Request $request)
-    {
+    {    
+
         $query = Item::with('user')->where('is_resolved', false);
 
         if ($request->filled('search')) {
@@ -20,6 +21,6 @@ class DashboardController extends Controller
         }
 
         $items = $query->latest()->limit(4)->get();
-        return view('items.index', compact('items'));
+        return view('dashboard', compact('items'));
     }
 }
