@@ -28,13 +28,13 @@
 
             <div class="hidden sm:flex sm:items-center sm:ms-6 space-x-4">
                 <div class="photo-section">
-           @if(Auth::user()->profile_photo)
-                    <div class="flex-shrink-0 me-2">
-                        <img src="{{ asset('storage/' . Auth::user()->profile_photo) }}" 
-                             alt="Profile" 
-                             class="h-10 w-10 rounded-full object-cover border border-gray-300 dark:border-gray-600">
-                       </div>
-                @endif
+        @auth
+    <a href="{{ route('profile.show', Auth::id()) }}">
+        <img src="{{ Auth::user()->photo_url }}" 
+             class="w-10 h-10 rounded-full object-cover" 
+             alt="Profile">
+    </a>
+@endauth
            </div>
                 <a href="{{ route('notifications.index') }}" class="relative p-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 transition duration-150">
                     <i class="fas fa-bell text-xl"></i>

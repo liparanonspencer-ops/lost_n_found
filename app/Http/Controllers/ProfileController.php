@@ -73,6 +73,15 @@ class ProfileController extends Controller
     return Redirect::route('profile.edit')->with('status', 'profile-updated');
 }
 
+  public function show()
+    {
+        // Get the logged-in user
+        $user = Auth::user();
+
+        // Return a SIMPLE Blade view
+        return view('profile.show', compact('user'));
+    }
+
     /**
      * Delete the user's account.
      */

@@ -13,6 +13,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\DashboardController;
 
+
 // Public Routes
 Route::get('/', function () {
     return view('welcome');
@@ -75,7 +76,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+    Route::get('/user/profile', [ProfileController::class, 'show'])->name('profile.show');
     // Legacy route redirected to the new clean admin route
     Route::get('/profile/users', function() {
         return redirect()->route('admin.users.index');

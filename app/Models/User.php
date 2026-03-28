@@ -52,6 +52,15 @@ class User extends Authenticatable
             'otp_expires_at' => 'datetime',
         ];
     }
+    public function getPhotoUrlAttribute()
+{
+    if ($this->profile_photo) {
+        return asset('storage/' . $this->profile_photo);
+    }
+
+    // Fallback to a UI Avatar based on the user's name if no photo exists
+    return "https://ui-avatars.com/api/?name=" . urlencode($this->first_name . ' ' . $this->last_name) . "&color=7F9CF5&background=EBF4FF";
+}
 
     /**
      * Get all items posted by the user (Lost or Found).
