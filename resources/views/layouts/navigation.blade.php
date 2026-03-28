@@ -12,6 +12,9 @@
                      <x-nav-link :href="route('notifications.index')" :active="request()->routeIs('notifications.index')" class="text-black dark:text-gray-400">
                         {{ __('Notifications') }}
                     </x-nav-link>
+                       <x-nav-link :href="route('calendar.index')" :active="request()->routeIs('calendar.index')" class="text-black dark:text-gray-400">
+                        {{ __('Calendar') }}
+                    </x-nav-link>
                      
 
                     @can('admin')
@@ -112,6 +115,10 @@
                     </span>
                 @endif
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('calendar.index')" :active="request()->routeIs('calendar.index')">
+                {{ __('Calendar') }}
+            </x-responsive-nav-link>
+      
         
             @can('admin')
                 <x-responsive-nav-link :href="route('admin.claims.index')" :active="request()->routeIs('admin.claims.index')">

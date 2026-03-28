@@ -12,6 +12,7 @@ use App\Http\Controllers\UserClaimController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CalendarController;
 
 
 // Public Routes
@@ -85,6 +86,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // 5. Settings routes
     Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');
     Route::patch('/settings', [SettingsController::class, 'update'])->name('settings.update');
+    // 6. calendar routes
+    Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
+    Route::get('/api/events', [CalendarController::class, 'getEvents']);
 
 });
 
