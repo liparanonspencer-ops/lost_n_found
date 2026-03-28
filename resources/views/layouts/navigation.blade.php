@@ -112,7 +112,7 @@
                     </span>
                 @endif
             </x-responsive-nav-link>
-
+        
             @can('admin')
                 <x-responsive-nav-link :href="route('admin.claims.index')" :active="request()->routeIs('admin.claims.index')">
                     {{ __('Manage Claims') }}
@@ -141,9 +141,11 @@
                     {{ __('Settings') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
+                    {{ __('Profile settings') }}
                 </x-responsive-nav-link>
-
+                <x-responsive-nav-link :href="route('profile.show')">
+                    {{__('View profile')}} 
+                </x-responsive-nav-link>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <x-responsive-nav-link :href="route('logout')"
