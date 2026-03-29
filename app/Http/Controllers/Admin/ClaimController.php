@@ -31,50 +31,45 @@ class ClaimController extends Controller
         return view('admin.claims.history', compact('claims'));
     }
 
-    public function update(Request $request, Claim $claim)
-    {
-        $request->validate([
-            'status' => 'required|string'
+   public function update(Request $request, Claim $claim)
+{
+    // 1. Validate (Allow string '1' or '0' for is_resolved)
+    $request->validate([
+        'status' => 'required|string',
+        'is_resolved' => 'required' 
+    ]);
+
+    // 2. Use the transaction
+    DB::transaction(function () use ($request, $claim) {
+        
+        // Force the value to a proper integer/boolean for the DB
+        $resolvedValue = (bool) $request->is_resolved;
+
+        // Update Claim
+        $claim->update([
+            'status' => $request->status,
+            
         ]);
 
-        DB::transaction(function () use ($request, $claim) {
-            // 2. Update the specific claim status
-            $claim->update([
-                'status' => $request->status
+        if (strtolower($request->status) === 'approved' && $claim->item) {
+            // Update Item
+            $claim->item->update([
+                'status' => 'not available', 
+                'is_resolved' => true
             ]);
 
-            // 3. Notify the specific claimant (Manual action)
-            $claim->user->notify(new ClaimStatusNotification($claim, $request->status));
-           // Admin gets notif as well after admin approves request
-           auth()->user()->notify(new ClaimStatusNotification($claim, $request->status));
-            // 4. If approved, update the Item and reject others
-            if (strtolower($request->status) === 'approved' && $claim->item) {
-                
-                $claim->item->update([
-                    'status' => 'not available' 
-                ]);
+            // Reject others
+            Claim::where('item_id', $claim->item_id)
+                ->where('id', '!=', $claim->id)
+                ->where('status', 'pending')
+                ->update(['status' => 'rejected', 'is_resolved' => false]);
+            
+            // Note: If you use ->update() on a Query Builder (like above), 
+            // Notifications won't fire automatically. 
+            // If you need notifications for EVERYONE, keep your foreach loop.
+        }
+    });
 
-                // 5. Handle Auto-rejections for other users
-                $otherClaims = Claim::where('item_id', $claim->item_id)
-                    ->where('id', '!=', $claim->id)
-                    ->where('status', 'pending')
-                    ->get();
-
-                foreach ($otherClaims as $otherClaim) {
-                    $otherClaim->update(['status' => 'rejected']);
-                    
-                    // Notify other users that they were rejected because the item is gone
-                    $otherClaim->user->notify(new ClaimStatusNotification($otherClaim, 'rejected'));
-                }
-                    
-                $claim->item->refresh();
-            }
-        });
-
-        $message = $request->status === 'approved' 
-            ? 'Claim approved and others auto-rejected.' 
-            : 'Claim has been rejected.';
-
-        return back()->with('success', $message);
-    }
+    return redirect()->route('admin.claims.index')->with('success', 'Action completed successfully.');
+}
 }

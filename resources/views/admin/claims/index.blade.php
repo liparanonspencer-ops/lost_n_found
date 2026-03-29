@@ -83,6 +83,7 @@
                                                 <form id="approve-form-{{ $claim->id }}" action="{{ route('admin.claims.update', $claim) }}" method="POST" class="inline">
                                                     @csrf @method('PATCH')
                                                     <input type="hidden" name="status" value="approved">
+                                                    <input type="hidden" name="is_resolved" value="1">
                                                     <button type="button" 
                                                         onclick="openConfirmModal('approve-form-{{ $claim->id }}', 'approve')"
                                                         class="h-9 px-4 bg-emerald-600 text-white text-xs font-bold rounded-xl shadow-lg shadow-emerald-100 dark:shadow-none hover:bg-emerald-700 transition active:scale-95">
@@ -93,6 +94,7 @@
                                                 <form id="reject-form-{{ $claim->id }}" action="{{ route('admin.claims.update', $claim) }}" method="POST" class="inline">
                                                     @csrf @method('PATCH')
                                                     <input type="hidden" name="status" value="rejected">
+                                                     <input type="hidden" name="is_resolved" value="0">
                                                     <button type="button" 
                                                         onclick="openConfirmModal('reject-form-{{ $claim->id }}', 'reject')"
                                                         class="h-9 px-4 bg-white dark:bg-gray-700 border border-slate-200 dark:border-gray-600 text-rose-600 dark:text-rose-400 text-xs font-bold rounded-xl hover:bg-rose-50 dark:hover:bg-rose-900/20 transition active:scale-95">
@@ -150,45 +152,71 @@
             </div>
         </div>
     </div>
-     <script>
-        let activeFormId = null;
+   <script>
+    // 1. Initialize the global tracker
+    let activeFormId = null;
 
-        function openConfirmModal(formId, type) {
-            activeFormId = formId;
-            const modal = document.getElementById('confirmationModal');
-            const title = document.getElementById('modal-title');
-            const desc = document.getElementById('modalDescription');
-            const iconContainer = document.getElementById('modalIconContainer');
-            const icon = document.getElementById('modalIcon');
-            const confirmBtn = document.getElementById('confirmBtn');
+    function openConfirmModal(formId, type) {
+        // 2. CRITICAL: Assign the passed formId so the Confirm button knows what to submit
+        activeFormId = formId; 
 
-            if (type === 'approve') {
-                title.innerText = 'Approve This Claim?';
-                desc.innerText = 'By approving, this item will be marked as resolved. All other pending claims for this item will be automatically rejected.';
-                iconContainer.className = 'mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10';
-                icon.className = 'fas fa-check-circle text-green-600';
-                confirmBtn.className = 'inline-flex w-full justify-center rounded-md bg-green-600 px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-green-700 sm:ml-3 sm:w-auto';
-            } else {
-                title.innerText = 'Reject This Claim?';
-                desc.innerText = 'Are you sure you want to reject this request? This user will be notified that their claim was unsuccessful.';
-                iconContainer.className = 'mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10';
-                icon.className = 'fas fa-exclamation-triangle text-red-600';
-                confirmBtn.className = 'inline-flex w-full justify-center rounded-md bg-red-600 px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-red-700 sm:ml-3 sm:w-auto';
+        const modal = document.getElementById('confirmationModal');
+        const title = document.getElementById('modal-title');
+        const desc = document.getElementById('modalDescription');
+        const iconContainer = document.getElementById('modalIconContainer');
+        const icon = document.getElementById('modalIcon');
+        const confirmBtn = document.getElementById('confirmBtn');
+
+        // Reset Tailwind classes to prevent color bleeding between Approve/Reject
+        confirmBtn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700', 'bg-rose-600', 'hover:bg-rose-700');
+        iconContainer.classList.remove('bg-emerald-100', 'bg-rose-100');
+
+        if (type === 'approve') {
+            title.innerText = 'Approve This Claim?';
+            desc.innerText = 'By approving, this item will be marked as resolved. All other pending claims for this item will be automatically rejected.';
+            iconContainer.classList.add('bg-emerald-100');
+            icon.className = 'fas fa-check-circle text-emerald-600 text-2xl';
+            confirmBtn.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+        } else {
+            title.innerText = 'Reject This Claim?';
+            desc.innerText = 'Are you sure you want to reject this request? This user will be notified that their claim was unsuccessful.';
+            iconContainer.classList.add('bg-rose-100');
+            icon.className = 'fas fa-exclamation-triangle text-rose-600 text-2xl';
+            confirmBtn.classList.add('bg-rose-600', 'hover:bg-rose-700');
+        }
+
+        // Show the modal
+        modal.classList.remove('hidden');
+
+        // 3. Handle the confirmation click
+        confirmBtn.onclick = function(e) {
+            e.preventDefault();
+            
+            if (activeFormId) {
+                const form = document.getElementById(activeFormId);
+                if (form) {
+                    // Visual feedback
+                    confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
+                    confirmBtn.disabled = true;
+                    
+                    // Trigger the Laravel form (this sends the POST + _method PATCH)
+                    form.submit();
+                }
             }
+        };
+    }
 
-            modal.classList.remove('hidden');
+    // 4. Function to hide the modal
+    function closeModal() {
+        document.getElementById('confirmationModal').classList.add('hidden');
+        activeFormId = null;
+    }
 
-            confirmBtn.onclick = function() {
-                // Optional: Show loading state on button
-                confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
-                confirmBtn.disabled = true;
-                document.getElementById(activeFormId).submit();
-            };
+    // Optional: Close modal if user presses "Esc" key
+    window.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeModal();
         }
-
-        function closeModal() {
-            document.getElementById('confirmationModal').classList.add('hidden');
-            activeFormId = null;
-        }
-    </script>
+    });
+</script>
 @endsection
