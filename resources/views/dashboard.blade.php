@@ -19,7 +19,7 @@
 <div class="py-8 bg-slate-50 dark:bg-gray-900 min-h-screen text-slate-900 dark:text-slate-100 font-sans">
     <div class="max-w-7xl mx-auto px-6 lg:px-8">
 
-        {{-- ADMIN SECTION: Stats & Calendar Side-by-Side --}}
+        {{-- ADMIN SECTION--}}
         @can('admin')
         <div class="flex flex-col lg:flex-row gap-8 mb-12">
             

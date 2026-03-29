@@ -45,7 +45,8 @@ class ClaimController extends Controller
 
             // 3. Notify the specific claimant (Manual action)
             $claim->user->notify(new ClaimStatusNotification($claim, $request->status));
-
+           // Admin gets notif as well after admin approves request
+           auth()->user()->notify(new ClaimStatusNotification($claim, $request->status));
             // 4. If approved, update the Item and reject others
             if (strtolower($request->status) === 'approved' && $claim->item) {
                 

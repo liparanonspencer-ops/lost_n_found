@@ -3,6 +3,7 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    @can('user')
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-blue-400 dark:text-gray-400">
                         {{ __('Dashboard') }}
                     </x-nav-link>
@@ -16,8 +17,14 @@
                         {{ __('Calendar') }}
                     </x-nav-link>
                      
-
+                    @endcan
                     @can('admin')
+                      <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-blue-400 dark:text-gray-400">
+                        {{ __('Dashboard') }}
+                    </x-nav-link>
+                     <x-nav-link :href="route('notifications.index')" :active="request()->routeIs('notifications.index')" class="text-black dark:text-gray-400">
+                        {{ __('Notifications') }}
+                    </x-nav-link>
                         <x-nav-link :href="route('admin.claims.index')" :active="request()->routeIs('admin.claims.index')" class="text-black dark:text-gray-400">
                             {{ __('Manage Claims') }}
                         </x-nav-link>
@@ -115,9 +122,7 @@
                     </span>
                 @endif
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('calendar.index')" :active="request()->routeIs('calendar.index')">
-                {{ __('Calendar') }}
-            </x-responsive-nav-link>
+           
       
         
             @can('admin')
@@ -135,6 +140,9 @@
                 <x-responsive-nav-link :href="route('items.create')" :active="request()->routeIs('items.create')">
                     {{__('Add item') }}
                 </x-responsive-nav-link>
+                 <x-responsive-nav-link :href="route('calendar.index')" :active="request()->routeIs('calendar.index')">
+                {{ __('Calendar') }}
+            </x-responsive-nav-link>
             @endcan
         </div>
 

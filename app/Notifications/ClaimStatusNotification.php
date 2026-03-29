@@ -30,29 +30,47 @@ class ClaimStatusNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         $isApproved = $this->status === 'approved';
+        $itemName = $this->claim->item->item_name;
         
-        return (new MailMessage)
+        $email = (new MailMessage)
             ->subject($isApproved ? 'Claim Approved!' : 'Claim Update')
-            ->line("Hello {$notifiable->first_name},")
-            ->line($isApproved 
-                ? "Your claim for '{$this->claim->item->item_name}' has been approved. Please print or scan the QR-code's admin provided." 
-                : "Your claim for '{$this->claim->item->item_name}' was not approved.")
-            ->action('View Details', route('dashboard'))
-            ->line('Thank you for using STI Lost and Found system!');
+            ->line("Hello {$notifiable->first_name},");
+
+            if($notifiable->role === 'admin') {
+               $email->line($isApproved 
+            ? "You approved the claim request for {$itemName}." 
+            : "You rejected the claim request for {$itemName}.");
+            } else {
+              $email->line($isApproved 
+            ? "Your claim request for {$itemName} has been approved. Please visit the office to claim your item." 
+            : "Your claim request for {$itemName} has been rejected.");
+            }
+        return $email->action('View Details', route('dashboard'))
+                     ->line('Thank you for using STI Lost and Found system!');
     }
 
     public function toArray($notifiable)
     {
         $isApproved = $this->status === 'approved';
+        $itemName = $this->claim->item->item_name;
 
+        if($notifiable->role === 'admin') {
         return [
             'claim_id' => $this->claim->id,
             'type' => $isApproved ? 'claim_approved' : 'claim_rejected',
             'title' => $isApproved ? 'Claim Approved!' : 'Claim Rejected',
             'message' => $isApproved 
-                ? "Your claim for '{$this->claim->item->item_name}' was approved."
-                : "Your claim for '{$this->claim->item->item_name}' was not approved.",
+                ? "Request Approval claim for '{$this->claim->item->item_name}' was approved."
+                : "Request Approval claim for '{$this->claim->item->item_name}' was not approved.",
         ];
     }
+    return [
+         'claim_id' => $this->claim->id,
+            'type' => $isApproved ? 'claim_approved' : 'claim_rejected',
+            'title' => $isApproved ? 'Claim Approved!' : 'Claim Rejected',
+            'message' => $isApproved 
+                ? "Your claim for '{$itemName}' was approved."
+                : "Your claim for '{$itemName}' was not approved.",
+    ];
 }
-
+}
