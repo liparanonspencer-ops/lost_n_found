@@ -30,5 +30,14 @@
 
         <button onclick="window.print()" class="no-print w-full py-3 bg-black text-white font-bold rounded">Click to Print</button>
     </div>
+    <script>
+    // Optional: Automatically open print dialog when page loads
+    window.onload = function() {
+        // Small delay to ensure QR code image is rendered
+        setTimeout(() => {
+            window.print();
+        }, 500);
+    };
+</script>
 </body>
 </html>

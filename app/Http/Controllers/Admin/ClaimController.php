@@ -72,4 +72,5 @@ class ClaimController extends Controller
 
     return redirect()->route('admin.claims.index')->with('success', 'Action completed successfully.');
 }
+  
 }

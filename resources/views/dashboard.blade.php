@@ -19,7 +19,7 @@
 <div class="py-8 bg-slate-50 dark:bg-gray-900 min-h-screen text-slate-900 dark:text-slate-100 font-sans">
     <div class="max-w-7xl mx-auto px-6 lg:px-8">
 
-        {{-- ADMIN SECTION--}}
+        {{-- ADMIN SECTION --}}
         @can('admin')
         <div class="flex flex-col lg:flex-row gap-8 mb-12">
             
@@ -87,7 +87,7 @@
                 </div>
             </div>
 
-            {{-- RIGHT SIDE: Calendar (1/3 width) --}}
+            {{-- RIGHT SIDE: Calendar --}}
             <div class="w-full lg:w-1/3">
                 <div class="bg-white dark:bg-gray-800 p-6 rounded-[2.5rem] shadow-xl border border-slate-100 dark:border-gray-700 h-full">
                     <h3 class="font-bold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
@@ -139,7 +139,7 @@
         </div>
 
         {{-- Community Feed --}}
-        <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] p-8 border border-slate-100 dark:border-gray-700">
+        <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] p-8 border border-slate-100 dark:border-gray-700 mb-12">
             <h3 class="text-xl font-bold mb-8">Community Feed</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 @forelse($items as $item)
@@ -159,12 +159,63 @@
                             <p class="text-[11px] text-slate-400 mt-2 italic"><i class="fas fa-map-marker-alt text-indigo-500 mr-1"></i> {{ $item->location }}</p>
                             <div class="mt-6 pt-4 border-t border-slate-200 dark:border-gray-800 flex justify-between items-center">
                                 <span class="text-[10px] text-slate-400 font-bold">{{ $item->created_at->diffForHumans() }}</span>
-                                <a href="{{ route('items.show', $item->id) }}" class="text-indigo-600 text-[10px] font-black uppercase">View Details <i class="fas fa-arrow-right ml-1"></i></a>
+                                <a href="{{ route('items.show', $item->id) }}" class="text-indigo-600 text-[10px] font-black uppercase text-xs">View Details <i class="fas fa-arrow-right ml-1"></i></a>
                             </div>
                         </div>
                     </div>
                 @empty
                     <div class="col-span-full py-12 text-center text-slate-400">The directory is currently empty.</div>
+                @endforelse
+            </div>
+        </div>
+
+        {{-- USER CLAIMS SECTION --}}
+        <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] p-8 border border-slate-100 dark:border-gray-700">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/40 rounded-xl flex items-center justify-center text-indigo-600">
+                    <i class="fas fa-file-invoice"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold">My Active Claims</h3>
+                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Track your recovery progress</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                @forelse($claims as $claim)
+                    <div class="p-6 rounded-[2rem] bg-slate-50 dark:bg-gray-900 border border-slate-100 dark:border-gray-800 transition-all hover:border-indigo-500/30">
+                        <div class="flex justify-between items-start mb-4">
+                            <h4 class="font-black text-slate-800 dark:text-white truncate">{{ $claim->item->item_name }}</h4>
+                            <span class="text-[9px] font-black uppercase bg-white dark:bg-gray-800 px-2 py-1 rounded shadow-sm text-slate-400">#{{ $claim->id }}</span>
+                        </div>
+                        
+                        {{-- Logic to show button if resolved --}}
+                        @if($claim->item->is_resolved)
+                            <div class="mt-4 p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800/50">
+                                <div class="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 mb-4">
+                                    <i class="fas fa-check-circle text-xs"></i>
+                                    <span class="text-[10px] font-black uppercase tracking-widest">Request Approved</span>
+                                </div>
+                                <a href="{{ route('claims.ads', $claim->id) }}" 
+                                   class="flex items-center justify-center gap-2 w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-bold text-xs shadow-lg shadow-emerald-500/20 transition-all">
+                                    <i class="fas fa-ticket-alt"></i>
+                                    Get Retrieval Pass
+                                </a>
+                            </div>
+                        @else
+                            <div class="mt-4 p-4 rounded-2xl bg-slate-100 dark:bg-gray-800 border border-slate-200 dark:border-gray-700">
+                                <div class="flex items-center gap-2 text-amber-600 dark:text-amber-500 mb-2">
+                                    <i class="fas fa-spinner fa-spin text-xs"></i>
+                                    <span class="text-[10px] font-black uppercase tracking-widest">Pending Verification</span>
+                                </div>
+                                <p class="text-[10px] text-slate-500 leading-relaxed">Admin is currently reviewing your claim. You will receive a notification once verified.</p>
+                            </div>
+                        @endif
+                    </div>
+                @empty
+                    <div class="col-span-full py-12 text-center border-2 border-dashed border-slate-100 dark:border-gray-800 rounded-[2rem]">
+                        <p class="text-slate-400 text-sm italic">You haven't made any claims yet.</p>
+                    </div>
                 @endforelse
             </div>
         </div>
@@ -187,18 +238,21 @@
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
-            initialView: 'dayGridMonth',
-            height: 'auto',
-            headerToolbar: { left: 'prev', center: 'title', right: 'next' },
-            events: '/api/events',
-            eventColor: '#6366f1',
-            dateClick: function(info) {
-                let title = prompt('Quick Event for ' + info.dateStr + ':');
-                if (title) { console.log('Saving local event: ' + title); }
-            }
-        });
-        calendar.render();
+        const calendarEl = document.getElementById('calendar');
+        if (calendarEl) {
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                height: 'auto',
+                headerToolbar: { left: 'prev', center: 'title', right: 'next' },
+                events: '/api/events',
+                eventColor: '#6366f1',
+                dateClick: function(info) {
+                    let title = prompt('Quick Event for ' + info.dateStr + ':');
+                    if (title) { console.log('Saving local event: ' + title); }
+                }
+            });
+            calendar.render();
+        }
     });
 </script>
 @endpush
