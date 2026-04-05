@@ -40,22 +40,21 @@ class UserClaimController extends Controller
         return back()->with('success', 'Your claim request has been sent to the Admin!');
     }
 
-    // --- UPDATED: Now checks $claim->item->is_resolved ---
+    
     public function showAds(Claim $claim) 
     {
-        // 1. Ownership check & look at the ITEM status instead of CLAIM status
-        if (Auth::id() !== $claim->user_id || !$claim->item->is_resolved) {
+        
+        if (Auth::id() !== $claim->user_id || !$claim->is_resolved) {
             abort(403, 'This claim is not yet approved by admin.');
         }
 
         return view('admin.claims.ads', compact('claim'));
     }
 
-    // --- UPDATED: Now checks $claim->item->is_resolved ---
+
     public function showPrint(Claim $claim) 
     {
-        // 1. Ownership check & look at the ITEM status
-        if (Auth::id() !== $claim->user_id || !$claim->item->is_resolved) {
+        if (Auth::id() !== $claim->user_id || !$claim->is_resolved) {
             abort(403, 'Unauthorized access to printing.');
         }
 

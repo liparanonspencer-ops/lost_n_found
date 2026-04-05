@@ -43,12 +43,12 @@ class ItemController extends Controller
             return redirect()->route('login')->with('error', 'Please login first.');
         }
 
-        // Prevent owner from claiming their own item
+        
         if (auth()->id() === $item->user_id) {
             return back()->with('error', 'You cannot claim your own item.');
         }
 
-        // Prevent duplicate claims
+    
         $exists = Claim::where('item_id', $item->id)
                        ->where('user_id', auth()->id())
                        ->exists();
@@ -57,12 +57,13 @@ class ItemController extends Controller
             return back()->with('error', 'You have already submitted a claim for this item.');
         }
 
-        // Create claim
+    
         Claim::create([
             'item_id' => $item->id,
             'user_id' => auth()->id(),
             'message' => $request->input('message', 'I would like to claim this item.'),
             'status'  => 'pending',
+           
         ]);
 
         return back()->with('success', 'Claim submitted successfully! The admin will review it.');
@@ -104,9 +105,7 @@ class ItemController extends Controller
         return view('items.create');
     }
 
-    /**
-     * 🔥 MAIN CLAIM APPROVAL SYSTEM (MATCHES YOUR BLADE)
-     */
+  
     public function update(Request $request, Claim $claim)
     {
         $request->validate([

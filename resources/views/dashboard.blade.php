@@ -190,7 +190,7 @@
                         </div>
                         
                         {{-- Logic to show button if resolved --}}
-                        @if($claim->item->is_resolved)
+                        @if($claim->is_resolved)
                             <div class="mt-4 p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800/50">
                                 <div class="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 mb-4">
                                     <i class="fas fa-check-circle text-xs"></i>
