@@ -31,7 +31,7 @@ class ClaimController extends Controller
         return view('admin.claims.history', compact('claims'));
     }
 
- public function update(Request $request, Claim $claim)
+public function update(Request $request, Claim $claim)
 {
     $request->validate([
         'status' => 'required|string',
@@ -42,30 +42,46 @@ class ClaimController extends Controller
         
         $resolvedValue = (bool) $request->is_resolved;
 
+        // 1. Update the current claim status
         $claim->update([
             'status' => $request->status,
             'is_resolved' => $resolvedValue,
         ]);
 
+        // 2. Notify the person who made THIS claim
+        if ($claim->user) {
+            $claim->user->notify(new ClaimStatusNotification($claim, $request->status));
+        }
+
+        // 3. Handle rejections for everyone else IF this one was approved
         if (strtolower($request->status) === 'approved' && $claim->item) {
             
+            // Mark the item as gone
             $claim->item->update([
                 'status' => 'not available', 
                 'is_resolved' => true
             ]);
 
-            
-            Claim::where('item_id', $claim->item_id)
+            // FIX: Define $otherClaims before looping
+            $otherClaims = Claim::where('item_id', $claim->item_id)
                 ->where('id', '!=', $claim->id)
                 ->where('status', 'pending')
-                ->update([
-                    'status' => 'rejected', 
-                    'is_resolved' => true 
+                ->get();
+
+            foreach ($otherClaims as $otherClaim) {
+                $otherClaim->update([
+                    'status' => 'rejected',
+                    'is_resolved' => true
                 ]);
+                
+                // Notify the other students
+                if ($otherClaim->user) {
+                    $otherClaim->user->notify(new ClaimStatusNotification($otherClaim, 'rejected'));
+                }
+            }
         }
     });
 
-    return redirect()->route('admin.claims.index')->with('success', 'Action completed successfully.');
+    return redirect()->route('admin.claims.index')->with('success', 'Claim processed and students notified.');
 }
-  
 }

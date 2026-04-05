@@ -19,6 +19,7 @@ class Claim extends Model
         'message',
         'status',
         'is_resolved',
+        'claim_reference',
     ];
     protected $casts = [ 'is_resolved' => 'boolean',];
 

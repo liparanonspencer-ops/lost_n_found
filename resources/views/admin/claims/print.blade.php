@@ -22,6 +22,7 @@
 
         <div class="text-left space-y-2 mb-8">
             <p class="text-xs font-bold uppercase">Claimant: <span class="font-normal">{{ $claim->user->first_name }} {{ $claim->user->last_name }}</span></p>
+            <p class="text-xs font-bold uppercase">Tracking-ID: <span class="font-normal">{{$claim->claim_reference}} </span></p>
             <p class="text-xs font-bold uppercase">Item: <span class="font-normal">{{$claim->item->item_name}}</span></p>
             <p class="text-xs font-bold uppercase">Email: <span class="font-normal">{{$claim->user->email}}</span></p>
             <p class="text-xs font-bold uppercase">Phone: <span class="font-normal">{{$claim->user->phone_number}}</span></p>

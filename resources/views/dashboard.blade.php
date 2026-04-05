@@ -196,6 +196,13 @@
                                     <i class="fas fa-check-circle text-xs"></i>
                                     <span class="text-[10px] font-black uppercase tracking-widest">Request Approved</span>
                                 </div>
+                                   {{-- Reference Code Block --}}
+                        <div class="mb-4">
+                            <p class="text-[9px] text-slate-400 font-black uppercase tracking-tighter">Reference Code</p>
+                            <code class="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 bg-slate-200/50 dark:bg-gray-800 px-2 py-1 rounded">
+                                {{ $claim->claim_reference ?? 'REF-PENDING' }}
+                            </code>
+                        </div>
                                 <a href="{{ route('claims.ads', $claim->id) }}" 
                                    class="flex items-center justify-center gap-2 w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-bold text-xs shadow-lg shadow-emerald-500/20 transition-all">
                                     <i class="fas fa-ticket-alt"></i>

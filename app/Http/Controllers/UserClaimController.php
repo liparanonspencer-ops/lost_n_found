@@ -35,6 +35,7 @@ class UserClaimController extends Controller
             'item_id' => $request->item_id,
             'status'  => 'pending',
             'is_resolved' => false, 
+            'claim_reference' => 'CLAIM-'.strtoupper(uniqid()),
         ]);
 
         return back()->with('success', 'Your claim request has been sent to the Admin!');

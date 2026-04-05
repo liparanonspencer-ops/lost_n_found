@@ -137,7 +137,7 @@ class ItemController extends Controller
             ]);
 
         } else {
-            // Reject only this claim
+            
             $claim->status = 'rejected';
             $claim->save();
         }
