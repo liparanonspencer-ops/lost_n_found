@@ -6,7 +6,20 @@
         {{ __('Dashboard') }}
     </h2>
     @can('admin')
-    <div class="hidden md:flex items-center gap-3">
+    <div class="hidden md:flex items-center gap-6">
+        {{-- Header Notification Bell --}}
+        <div class="relative group cursor-pointer">
+            <i class="fas fa-bell text-slate-400 group-hover:text-indigo-500 transition-colors"></i>
+            @if(auth()->user()->unreadNotifications->count() > 0)
+                <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-rose-500 text-[7px] text-white items-center justify-center font-bold">
+                        {{ auth()->user()->unreadNotifications->count() }}
+                    </span>
+                </span>
+            @endif
+        </div>
+
         <span class="px-3 py-1 bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 text-[10px] font-black uppercase tracking-widest rounded-full border border-indigo-200 dark:border-indigo-800">
             System Controller
         </span>
@@ -19,9 +32,17 @@
 <div class="py-8 bg-slate-50 dark:bg-gray-900 min-h-screen text-slate-900 dark:text-slate-100 font-sans">
     <div class="max-w-7xl mx-auto px-6 lg:px-8">
 
+        {{-- Global Success Alert --}}
+        @if(session('success'))
+            <div class="mb-8 p-4 bg-emerald-500 text-white rounded-[1.5rem] font-bold text-sm shadow-xl shadow-emerald-500/20 flex items-center gap-3 animate-bounce">
+                <i class="fas fa-check-circle text-lg"></i>
+                {{ session('success') }}
+            </div>
+        @endif
+
         {{-- ADMIN SECTION --}}
         @can('admin')
-        <div class="flex flex-col lg:flex-row gap-8 mb-12">
+        <div class="flex flex-col lg:flex-row gap-8 mb-8">
             
             {{-- LEFT SIDE: Stats Grid (2/3 width) --}}
             <div class="w-full lg:w-2/3" 
@@ -96,6 +117,47 @@
                     </h3>
                     <div id='calendar' class="dark:text-white text-[11px]"></div>
                 </div>
+            </div>
+        </div>
+
+        {{-- NEW: ADMIN NOTIFICATION CENTER --}}
+        <div class="mb-12 bg-white dark:bg-gray-800 rounded-[2.5rem] p-8 border border-slate-100 dark:border-gray-700 shadow-xl">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="font-bold text-lg text-slate-800 dark:text-white flex items-center gap-2">
+                    <i class="fas fa-history text-indigo-500"></i>
+                    Recent Activity Logs
+                </h3>
+                <span class="px-3 py-1 bg-slate-100 dark:bg-gray-700 text-slate-500 rounded-lg text-[10px] font-black uppercase tracking-wider">
+                    {{ auth()->user()->notifications->count() }} Total
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                @forelse(auth()->user()->notifications->take(6) as $notification)
+                    <div class="p-5 rounded-3xl {{ $notification->read_at ? 'bg-slate-50 dark:bg-gray-900/50 opacity-60' : 'bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800' }} transition-all">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-[9px] font-black uppercase text-indigo-600 dark:text-indigo-400">
+                                System Log
+                            </span>
+                            <span class="text-[9px] text-slate-400 font-bold italic">
+                                {{ $notification->created_at->diffForHumans() }}
+                            </span>
+                        </div>
+                        <p class="text-xs font-bold text-slate-800 dark:text-slate-200 leading-relaxed">
+                            {{ $notification->data['message'] ?? 'A claim was updated.' }}
+                        </p>
+                        <div class="mt-4 flex items-center justify-between">
+                            <span class="text-[10px] px-2 py-0.5 bg-white dark:bg-gray-800 rounded-md font-mono text-slate-500 border border-slate-100 dark:border-gray-700">
+                                ID: #{{ $notification->data['claim_id'] ?? '?' }}
+                            </span>
+                        </div>
+                    </div>
+                @empty
+                    <div class="col-span-full text-center py-12">
+                        <i class="fas fa-inbox text-slate-300 text-3xl mb-4"></i>
+                        <p class="text-slate-400 text-xs italic">No activity logs recorded yet.</p>
+                    </div>
+                @endforelse
             </div>
         </div>
 
@@ -189,20 +251,18 @@
                             <span class="text-[9px] font-black uppercase bg-white dark:bg-gray-800 px-2 py-1 rounded shadow-sm text-slate-400">#{{ $claim->id }}</span>
                         </div>
                         
-                        {{-- Logic to show button if resolved --}}
                         @if($claim->is_resolved)
                             <div class="mt-4 p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800/50">
                                 <div class="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 mb-4">
                                     <i class="fas fa-check-circle text-xs"></i>
                                     <span class="text-[10px] font-black uppercase tracking-widest">Request Approved</span>
                                 </div>
-                                   {{-- Reference Code Block --}}
-                        <div class="mb-4">
-                            <p class="text-[9px] text-slate-400 font-black uppercase tracking-tighter">Reference Code</p>
-                            <code class="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 bg-slate-200/50 dark:bg-gray-800 px-2 py-1 rounded">
-                                {{ $claim->claim_reference ?? 'REF-PENDING' }}
-                            </code>
-                        </div>
+                                <div class="mb-4">
+                                    <p class="text-[9px] text-slate-400 font-black uppercase tracking-tighter">Reference Code</p>
+                                    <code class="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 bg-slate-200/50 dark:bg-gray-800 px-2 py-1 rounded">
+                                        {{ $claim->claim_reference ?? 'REF-PENDING' }}
+                                    </code>
+                                </div>
                                 <a href="{{ route('claims.ads', $claim->id) }}" 
                                    class="flex items-center justify-center gap-2 w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-bold text-xs shadow-lg shadow-emerald-500/20 transition-all">
                                     <i class="fas fa-ticket-alt"></i>
@@ -239,6 +299,9 @@
     .fc .fc-button-primary { @apply bg-indigo-600 border-none text-[9px] uppercase font-black px-2 !important; }
     .fc .fc-daygrid-day-number { @apply dark:text-slate-400 p-2 font-bold; }
     .fc td, .fc th { border-color: rgba(226, 232, 240, 0.1) !important; }
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { @apply bg-transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { @apply bg-slate-200 dark:bg-gray-700 rounded-full; }
 </style>
 
 @push('scripts')

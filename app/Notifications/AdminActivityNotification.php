@@ -11,6 +11,7 @@ class AdminActivityNotification extends Notification
     use Queueable;
 
     protected $claim;
+    protected $status;
 
     /**
      * Pass the claim into the constructor
@@ -18,6 +19,7 @@ class AdminActivityNotification extends Notification
     public function __construct($claim)
     {
         $this->claim = $claim;
+    
     }
 
     /**
