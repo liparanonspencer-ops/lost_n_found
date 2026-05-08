@@ -49,28 +49,16 @@ class ClaimStatusNotification extends Notification
                      ->line('Thank you for using STI Lost and Found system!');
     }
 
-    public function toArray($notifiable)
-    {
-        $isApproved = $this->status === 'approved';
-        $itemName = $this->claim->item->item_name;
-
-        if($notifiable->role === 'admin') {
-        return [
-            'claim_id' => $this->claim->id,
-            'type' => $isApproved ? 'claim_approved' : 'claim_rejected',
-            'title' => $isApproved ? 'Claim Approved!' : 'Claim Rejected',
-            'message' => $isApproved 
-                ? "Request Approval claim for '{$this->claim->item->item_name}' was approved."
-                : "Request Approval claim for '{$this->claim->item->item_name}' was not approved.",
-        ];
-    }
+   public function toArray($notifiable)
+{
+    $isApproved = $this->status === 'approved';
     return [
-         'claim_id' => $this->claim->id,
-            'type' => $isApproved ? 'claim_approved' : 'claim_rejected',
-            'title' => $isApproved ? 'Claim Approved!' : 'Claim Rejected',
-            'message' => $isApproved 
-                ? "Your claim for '{$itemName}' was approved."
-                : "Your claim for '{$itemName}' was not approved.",
+        'claim_id' => $this->claim->id,
+        'type' => 'user_claim_update',
+        'title' => $isApproved ? 'Claim Approved!' : 'Claim Rejected',
+        'message' => $isApproved 
+            ? "Your claim for '{$this->claim->item->item_name}' was approved."
+            : "Your claim for '{$this->claim->item->item_name}' was not approved.",
     ];
 }
 }

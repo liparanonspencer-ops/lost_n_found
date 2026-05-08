@@ -58,7 +58,7 @@ class ClaimController extends Controller
             // 3. Notify ALL Admins (This populates the "Recent Activity Logs" on the Dashboard)
             $admins = User::where('role', 'admin')->get();
             foreach ($admins as $admin) {
-                $admin->notify(new AdminActivityNotification($claim));
+                $admin->notify(new AdminActivityNotification($claim, $request->status));
             }
 
             // 4. Handle rejections for everyone else IF this one was approved

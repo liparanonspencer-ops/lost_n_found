@@ -16,10 +16,10 @@ class AdminActivityNotification extends Notification
     /**
      * Pass the claim into the constructor
      */
-    public function __construct($claim)
+    public function __construct($claim, $status = null)
     {
         $this->claim = $claim;
-    
+        $this->status = $status;
     }
 
     /**
@@ -32,9 +32,10 @@ class AdminActivityNotification extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
+        $action = $this->status ? ucfirst($this->status) : 'Processed';
         return (new MailMessage)
             ->subject('System Action Logged')
-            ->line("You approved the claim for '{$this->claim->item->item_name}'.")
+            ->line("You {$action} the claim for '{$this->claim->item->item_name}'.")
             ->action('View Admin History', route('admin.claims.history'));
     }
 
@@ -43,11 +44,12 @@ class AdminActivityNotification extends Notification
      */
     public function toArray($notifiable)
     {
+        $action = $this->status ? ucfirst($this->status) : 'Processed';
         return [
             'type' => 'admin_log',
             'icon' => 'fas fa-user-shield',
             'title' => 'System: Action Logged',
-            'message' => "You approved the claim for '{$this->claim->item->item_name}' submitted by {$this->claim->user->email}.",
+            'message' => "You {$action} the claim for '{$this->claim->item->item_name}' submitted by {$this->claim->user->email}.",
             'url' => route('admin.claims.history'),
         ];
     }

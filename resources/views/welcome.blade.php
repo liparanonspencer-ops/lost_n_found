@@ -144,18 +144,21 @@
                 </div>
             </div>
 
-            <div
-                class="relative lg:w-[448px] bg-[#f2f2f0] dark:bg-[#1b1b18] rounded-t-lg lg:rounded-t-none lg:rounded-r-lg overflow-hidden flex items-center justify-center p-12">
-                <div class="text-center">
-                    <div
-                        class="inline-block p-4 bg-white dark:bg-[#0a0a0a] rounded-2xl shadow-xl transform -rotate-3 mb-4">
-                        <svg class="w-16 h-16 text-[#f53003]" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
+           <div
+    class="relative lg:w-[448px] bg-cover bg-center rounded-t-lg lg:rounded-t-none lg:rounded-r-lg overflow-hidden flex items-center justify-center p-12"
+    style="background-image: url('{{ asset('image/lst_n_fnd.png') }}');">
+    <div class="absolute inset-0 bg-[#f2f2f0]/10 dark:bg-[#1b1b18]/10"></div>
+
+    <div class="text-center relative z-10">
+        <div class="inline-block p-4 bg-white dark:bg-[#0a0a0a] rounded-2xl shadow-xl transform -rotate-3 mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </div>
+    </div>
+</div>
         </main>
     </div>
 

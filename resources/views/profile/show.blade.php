@@ -8,7 +8,7 @@
 
 @section('content')
 <div class="py-6 sm:py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
-    <div class="overflow-hidden rounded-2xl bg-white shadow-sm border border-gray-100">
+    <div class="overflow-hidden rounded-2xl bg-slate-200 shadow-sm border border-gray-100">
         
         <div class="h-24 sm:h-32 bg-gradient-to-r from-gray-100 to-gray-200"></div>
 

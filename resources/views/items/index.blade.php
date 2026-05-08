@@ -13,7 +13,7 @@
 @endsection
 
 @section('content')
-<div class="py-8 bg-slate-50 dark:bg-gray-900 min-h-screen">
+<div class="py-8 bg-slate-200 dark:bg-gray-900 min-h-screen">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div class="mb-10">

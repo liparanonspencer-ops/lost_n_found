@@ -39,7 +39,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // --- NOTIFICATIONS ---
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::delete('/notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
     Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
+    Route::delete('/notifications/delete-all-unread', [NotificationController::class, 'destroyAll'])->name('notifications.destroyAll');
 
     // --- USER CLAIM SUBMISSION ---
     Route::post('/claims', [UserClaimController::class, 'store'])->name('claims.store');

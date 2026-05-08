@@ -18,7 +18,7 @@
     <div class="py-10 bg-slate-50 dark:bg-gray-900 min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
-            <div class="bg-white dark:bg-gray-800 rounded-[2rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-gray-700 overflow-hidden">
+            <div class="bg-slate-200 dark:bg-gray-800 rounded-[2rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-gray-700 overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse min-w-[700px]">
                         <thead>

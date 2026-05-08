@@ -18,6 +18,17 @@
                 </button>
             </form>
         @endif
+
+         @if($unreadCount > 0)
+            <form action="{{ route('notifications.destroyAll') }}" method="POST" class="w-full sm:w-auto">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="w-full sm:w-auto flex items-center justify-center text-xs font-black text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 uppercase tracking-widest bg-indigo-50 dark:bg-indigo-900/30 px-6 py-3 rounded-2xl transition-all active:scale-95 border border-indigo-100 dark:border-indigo-800/50 shadow-sm">
+                   <i class="fas fa-trash text-red-500"></i>
+                        {{ __('Delete All') }}
+             </button>
+            </form>
+        @endif
     </div>
 @endsection
 

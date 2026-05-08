@@ -28,4 +28,20 @@ class NotificationController extends Controller
 
         return back()->with('success', 'All notifications cleared!');
 }
+    public function destroy($id)
+    {
+        // We find the notification specifically for the logged-in user for security
+        $notification = auth()->user()->notifications()->findOrFail($id);
+        $notification->delete();
+
+        return back()->with('success', 'Notification deleted.');
+    }
+
+    public function destroyAll()
+    {
+        // Delete all unread notifications for the logged-in user
+        auth()->user()->unreadNotifications()->delete();
+
+        return back()->with('success', 'All unread notifications deleted.');
+    }
 }

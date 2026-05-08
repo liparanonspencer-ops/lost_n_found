@@ -94,15 +94,15 @@
                 </a>
             @endif
 
-            {{-- Secondary Action: Dismiss --}}
+            {{-- Secondary Action: Delete --}}
             @if($isUnread)
-                <form action="{{ route('notifications.read', $notification->id) }}" method="POST">
+                <form action="{{ route('notifications.destroy', $notification->id) }}" method="POST">
                     @csrf
-                    @method('PATCH')
+                    @method('DELETE')
                     <button type="submit" 
                             class="inline-flex items-center gap-x-2 rounded-xl bg-white dark:bg-gray-800 px-5 py-2.5 text-xs font-bold text-slate-600 dark:text-slate-300 shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-gray-600 hover:bg-slate-50 dark:hover:bg-gray-700 transition active:scale-95">
-                        <i class="fas fa-check text-indigo-500"></i>
-                        {{ __('Dismiss') }}
+                        <i class="fas fa-trash text-red-500"></i>
+                        {{ __('Delete') }}
                     </button>
                 </form>
             @endif
