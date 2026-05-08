@@ -53,4 +53,11 @@ class UserController extends Controller
 
         return Redirect::back()->with('success', 'User deleted successfully.');
     }
+      public function destroyAll()
+    {
+        // Delete all unread notifications for the logged-in user
+        auth()->user()->unreadNotifications()->delete();
+
+        return back()->with('success', 'All unread notifications deleted.');
+    }
 }
