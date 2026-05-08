@@ -40,6 +40,7 @@ class SendOTPNotification extends Notification
                     ->subject('Your OTP')
                     ->line('Your verification code is: ' . $this->otp)
                     ->line('This code will expire in 10 minutes.')
+                    ->action('View Details', route('otp.verify', ['email' => $notifiable->email]))
                     ->line('Thank you for using our application!');
     }
 
@@ -56,7 +57,7 @@ class SendOTPNotification extends Notification
         'type' => 'registration_otp',
         'message' => 'Your verification code is: ' . $this->otp,
         'icon' => 'fas fa-key', // Example FontAwesome icon
-        'url' => '/verify-account', // Where the user should go when they click it
+        'url' => route('otp.verify', ['email' => $notifiable->email]),
         ];
     }
 }

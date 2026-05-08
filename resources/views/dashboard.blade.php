@@ -8,20 +8,8 @@
     @can('admin')
     <div class="hidden md:flex items-center gap-6">
         {{-- Header Notification Bell --}}
-        <div class="relative group cursor-pointer">
-            <i class="fas fa-bell text-slate-400 group-hover:text-indigo-500 transition-colors"></i>
-            @if(auth()->user()->unreadNotifications->count() > 0)
-                <span class="absolute -top-1 -right-1 flex h-3 w-3">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-3 w-3 bg-rose-500 text-[7px] text-white items-center justify-center font-bold">
-                        {{ auth()->user()->unreadNotifications->count() }}
-                    </span>
-                </span>
-            @endif
-        </div>
-
         <span class="px-3 py-1 bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 text-[10px] font-black uppercase tracking-widest rounded-full border border-indigo-200 dark:border-indigo-800">
-            System Controller
+            Admin Management Controller
         </span>
     </div>
     @endcan
@@ -47,7 +35,7 @@
             {{-- LEFT SIDE: Stats Grid (2/3 width) --}}
             <div class="w-full lg:w-2/3" 
                  x-data="{ 
-                    stats: { active: 0, pending: 0, resolved: 0, users: 0 },
+                    stats: { active: 0, pending: 0, resolved: 0, users: 0, rejected: 0 },
                     async updateStats() {
                         try {
                             let response = await fetch('/api/admin/stats');
@@ -96,6 +84,14 @@
                         </div>
                         <h3 class="text-white/80 text-[10px] font-black uppercase tracking-widest">Resolved</h3>
                         <p class="text-3xl font-black mt-1 text-white tabular-nums" x-text="stats.resolved"></p>
+                    </a>
+
+                    <a href="{{ route('admin.claims.history') }}" class="block transition-transform hover:scale-[1.02] bg-red-500 p-6 rounded-[2rem] shadow-xl border border-red-400/20">
+                        <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-white mb-4">
+                            <i class="fas fa-handshake text-lg"></i>
+                        </div>
+                        <h3 class="text-white/80 text-[10px] font-black uppercase tracking-widest">Rejected</h3>
+                        <p class="text-3xl font-black mt-1 text-white tabular-nums" x-text="stats.rejected"></p>
                     </a>
 
                     <a href="{{ route('admin.users.index') }}" class="block transition-transform hover:scale-[1.02] bg-indigo-500 p-6 rounded-[2rem] shadow-xl border border-indigo-400/20">

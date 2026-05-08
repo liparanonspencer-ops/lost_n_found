@@ -17,6 +17,7 @@ class Item extends Model
         'location', 
         'status',
         'is_resolved',
+        'is_rejected', // New field for rejection status
         'image_path'
         ];
 

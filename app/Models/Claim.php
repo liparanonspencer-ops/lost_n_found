@@ -19,6 +19,7 @@ class Claim extends Model
         'message',
         'status',
         'is_resolved',
+        'is_rejected', // New field for rejection status
         'claim_reference',
     ];
     protected $casts = [ 'is_resolved' => 'boolean',];

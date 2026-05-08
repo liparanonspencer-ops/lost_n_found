@@ -35,6 +35,7 @@ class UserClaimController extends Controller
             'item_id' => $request->item_id,
             'status'  => 'pending',
             'is_resolved' => false, 
+            'is_rejected' => false,
             'claim_reference' => 'CLAIM-'.strtoupper(uniqid()),
         ]);
 

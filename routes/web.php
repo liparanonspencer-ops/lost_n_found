@@ -42,7 +42,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
     Route::delete('/notifications/delete-all-unread', [NotificationController::class, 'destroyAll'])->name('notifications.destroyAll');
     Route::delete('/notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
-
     // --- USER CLAIM SUBMISSION ---
     Route::post('/claims', [UserClaimController::class, 'store'])->name('claims.store');
 
@@ -82,6 +81,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'active' => Item::where('status','available')->count(),
             'pending' => Claim::where('status','pending')->count(),
             'resolved' => Claim::where('status','approved')->count(),
+            'rejected' => Claim::where('status','rejected')->count(),
             'users' => User::count(),
         ]);
     })->middleware(['can:admin']);

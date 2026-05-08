@@ -63,3 +63,6 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 });
+
+Route::get('verify-account', [RegisteredUserController::class, 'showVerifyOtp'])
+    ->name('verify.account');

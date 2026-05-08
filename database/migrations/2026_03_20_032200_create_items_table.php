@@ -24,6 +24,7 @@ return new class extends Migration
         $table->string('location');
         $table->string('image_path')->nullable();
         $table->boolean('is_resolved')->default(0);
+        $table->boolean('is_rejected')->default(0); // New column for rejection status
         $table->string('status')->default('available');
         $table->timestamps();
     });
