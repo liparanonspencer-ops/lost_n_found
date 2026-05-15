@@ -34,7 +34,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/items/create', [ItemController::class, 'create'])->name('items.create');
     Route::post('/items', [ItemController::class, 'store'])->name('items.store');
     Route::get('/items/{item}', [ItemController::class, 'show'])->name('items.show');
-    Route::get('search/items/{items}',[ItemController::class, 'search'])->name('items.search');
 
     // --- NOTIFICATIONS ---
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
