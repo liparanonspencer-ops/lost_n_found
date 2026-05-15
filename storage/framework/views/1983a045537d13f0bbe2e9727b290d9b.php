@@ -1,0 +1,99 @@
+<?php $__env->startSection('header'); ?>
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <h2 class="font-bold text-2xl text-slate-800 dark:text-slate-100 leading-tight">
+            <?php echo e(__('Lost & Found Items')); ?>
+
+        </h2>
+        <a href="<?php echo e(route('items.create')); ?>" class="inline-flex items-center justify-center px-5 py-2.5 bg-indigo-600 text-white text-sm font-semibold rounded-xl shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition-all active:scale-95">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+            Report Item
+        </a>
+    </div>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+<div class="py-8 bg-slate-200 dark:bg-gray-900 min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="mb-10">
+            <form action="<?php echo e(route('items.index')); ?>" method="GET" class="relative max-w-2xl mx-auto">
+                <div class="relative flex items-center">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    </div>
+                    <input type="text" name="search" value="<?php echo e(request('search')); ?>" 
+                           placeholder="Search by item name..." 
+                           class="block w-full pl-11 pr-32 py-4 bg-white dark:bg-gray-800 border-none rounded-2xl shadow-sm focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white transition-all">
+                    <button type="submit" class="absolute right-2 px-6 py-2 bg-slate-900 dark:bg-indigo-600 text-white text-sm font-bold rounded-xl hover:bg-slate-800 transition-all">
+                        Search
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <?php $__empty_1 = true; $__currentLoopData = $items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                <div class="group bg-white dark:bg-gray-800 rounded-3xl overflow-hidden border border-slate-100 dark:border-gray-700 hover:shadow-2xl transition-all duration-300 flex flex-col">
+                    
+                    <div class="relative h-56 w-full overflow-hidden bg-slate-100 dark:bg-gray-700">
+                        <?php if($item->image_path): ?>
+                            <img src="<?php echo e(asset('storage/' . $item->image_path)); ?>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <?php else: ?>
+                            <div class="flex flex-col items-center justify-center h-full text-slate-400">
+                                <svg class="w-12 h-12 mb-2 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                <span class="text-xs font-medium uppercase tracking-widest">No Image</span>
+                            </div>
+                        <?php endif; ?>
+                        
+                        <div class="absolute top-4 left-4">
+                            <span class="px-3 py-1 text-[10px] font-black uppercase rounded-full shadow-sm <?php echo e($item->type == 'lost' ? 'bg-rose-500 text-white' : 'bg-emerald-500 text-white'); ?>">
+                                <?php echo e($item->type); ?>
+
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="p-5 flex-grow flex flex-col">
+                        <div class="mb-4">
+                            <p class="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-1"><?php echo e($item->category); ?></p>
+                            <h2 class="font-bold text-slate-900 dark:text-white text-lg leading-snug group-hover:text-indigo-600 transition-colors"><?php echo e($item->item_name); ?></h2>
+                        </div>
+                        
+                        <div class="space-y-2 mb-6">
+                            <div class="flex items-center text-slate-500 dark:text-slate-400">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+                                <span class="text-xs truncate"><?php echo e($item->location); ?></span>
+                            </div>
+                            <div class="flex items-center text-slate-400 dark:text-slate-500">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <span class="text-[11px] font-medium"><?php echo e($item->created_at->diffForHumans()); ?></span>
+                            </div>
+                        </div>
+
+                        <a href="<?php echo e(route('items.show', $item->id)); ?>" class="mt-auto w-full inline-flex items-center justify-center px-4 py-3 bg-slate-50 dark:bg-gray-700 text-slate-700 dark:text-slate-200 text-sm font-bold rounded-xl hover:bg-indigo-600 hover:text-white transition-all duration-200">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                <div class="col-span-full py-20 flex flex-col items-center justify-center bg-white dark:bg-gray-800 rounded-3xl border-2 border-dashed border-slate-200 dark:border-gray-700">
+                    <div class="w-20 h-20 bg-slate-50 dark:bg-gray-900 rounded-full flex items-center justify-center mb-4">
+                        <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">No items found</h3>
+                    <p class="text-slate-500 dark:text-slate-400 mt-1">Try adjusting your search or filters.</p>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <?php if(method_exists($items, 'links')): ?>
+            <div class="mt-12">
+                <?php echo e($items->appends(request()->query())->links()); ?>
+
+            </div>
+        <?php endif; ?>
+        
+    </div>
+</div>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH /home/riku/Documents/laravel_poject/lost_n_found/resources/views/items/index.blade.php ENDPATH**/ ?>

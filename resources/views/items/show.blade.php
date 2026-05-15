@@ -1,118 +1,165 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Item Details: {{ $item->item_name }}
-            </h2>
-            <a href="{{ route('items.index') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                &larr; Back to List
-            </a>
-        </div>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            
-            @if(session('success'))
-                <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded shadow-sm">
-                    {{ session('success') }}
+@section('header')
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 px-4">
+        <h2 class="font-bold text-xl sm:text-2xl text-slate-800 dark:text-slate-100 leading-tight">
+            {{ __('Item Details') }}
+        </h2>
+        <a href="{{ route('items.index') }}" 
+           class="inline-flex items-center text-sm font-semibold text-slate-500 hover:text-indigo-600 transition-colors group">
+            <svg class="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Back to List
+        </a>
+    </div>
+@endsection
+
+@section('content')
+<div class="py-6 sm:py-10 bg-slate-200 dark:bg-gray-900 min-h-screen">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        @if(session('success'))
+            <div class="mb-6 flex items-center p-4 bg-emerald-50 border border-emerald-100 text-emerald-700 rounded-2xl shadow-sm">
+                <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                <p class="text-sm font-bold">{{ session('success') }}</p>
+            </div>
+        @endif
+
+        <div class="bg-white dark:bg-gray-800 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-xl shadow-slate-200/60 dark:shadow-none overflow-hidden border border-slate-100 dark:border-gray-700">
+            <div class="flex flex-col lg:flex-row">
+                
+                {{-- Left Side: Image Section --}}
+                <div class="lg:w-1/2 bg-slate-100 dark:bg-gray-900 flex items-center justify-center relative h-[300px] sm:h-[400px] lg:h-auto">
+                    @if($item->image_path)
+                        <img src="{{ asset('storage/' . $item->image_path) }}" class="w-full h-full object-cover">
+                    @else
+                        <div class="flex flex-col items-center text-slate-400">
+                            <svg class="w-16 h-16 mb-4 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                            <span class="font-medium italic">No Image Available</span>
+                        </div>
+                    @endif
+                    
+                    <div class="absolute top-4 left-4 sm:top-6 sm:left-6">
+                        <span class="px-3 py-1 sm:px-4 sm:py-1.5 text-[10px] sm:text-xs font-black uppercase tracking-widest rounded-full shadow-lg {{ $item->type == 'lost' ? 'bg-rose-500 text-white' : 'bg-emerald-500 text-white' }}">
+                            {{ $item->type }}
+                        </span>
+                    </div>
                 </div>
-            @endif
 
-            <div class="bg-gradient-to-r from-blue-500 to-cyan-400 p-[1px] sm:rounded-lg shadow-sm overflow-hidden">
-                 <div class="bg-white p-6 sm:rounded-[calc(0.5rem-1px)]">
-                <div class="md:flex">
-                    <div class="md:w-1/2 bg-gray-100 flex items-center justify-center p-4">
-                        @if($item->image_path)
-                            <img src="{{ asset('storage/' . $item->image_path) }}" class="rounded-lg shadow-sm max-h-96 object-contain">
-                        @else
-                            <div class="text-center py-20">
-                                <i class="fas fa-image text-gray-300 text-5xl mb-2"></i>
-                                <p class="text-gray-400 italic">No image available</p>
+                {{-- Right Side: Details Section --}}
+                <div class="lg:w-1/2 p-6 sm:p-8 lg:p-12">
+                    <div class="mb-6">
+                        <p class="text-indigo-600 dark:text-indigo-400 font-black text-[10px] sm:text-xs uppercase tracking-[0.2em] mb-2">{{ $item->category }}</p>
+                        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white leading-tight">{{ $item->item_name }}</h1>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 sm:gap-6 mb-8">
+                        <div class="col-span-2">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Description</h3>
+                                <span class="relative inline-flex items-center px-3 py-1 text-[10px] sm:text-[12px] font-black uppercase tracking-tighter rounded-full shadow-sm border {{ $item->status == 'available' ? 'bg-emerald-500 text-white border-emerald-700' : 'bg-rose-500 text-white border-rose-700' }}">
+                                    @if($item->status == 'available')
+                                        <span class="animate-ping absolute inset-0 rounded-full bg-emerald-400 opacity-75"></span>
+                                        <span class="relative inline-flex rounded-full h-1.5 w-1.5 sm:h-2 sm:w-2 bg-white mr-2"></span>
+                                    @else
+                                        <span class="relative inline-flex rounded-full h-1.5 w-1.5 sm:h-2 sm:w-2 bg-rose-200 mr-2"></span>
+                                    @endif
+                                    <span class="relative">{{ $item->status }}</span>
+                                </span>
+                            </div>
+                            <p class="text-slate-600 dark:text-slate-300 leading-relaxed text-sm sm:text-base">
+                                {{ $item->description }}
+                            </p>
+                        </div>
+
+                        <div class="bg-slate-50 dark:bg-gray-700/50 p-4 rounded-2xl">
+                            <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Location</h3>
+                            <p class="text-sm font-bold text-slate-700 dark:text-slate-200 truncate">{{ $item->location }}</p>
+                        </div>
+
+                        <div class="bg-slate-50 dark:bg-gray-700/50 p-4 rounded-2xl">
+                            <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Posted On</h3>
+                            <p class="text-sm font-bold text-slate-700 dark:text-slate-200">{{ $item->created_at->format('M d, Y') }}</p>
+                        </div>
+
+                        @if($item->user && $item->user->show_phone_publicly && $item->user->phone_number)
+                            <div class="col-span-2 mt-2 bg-indigo-50 dark:bg-indigo-900/30 p-4 rounded-2xl border border-indigo-100 dark:border-indigo-800/50">
+                                <h3 class="text-[10px] font-bold text-indigo-400 dark:text-indigo-300 uppercase tracking-widest mb-1">Contact Number</h3>
+                                <p class="text-sm font-extrabold text-indigo-700 dark:text-indigo-200 flex items-center">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                    </svg>
+                                    {{ $item->user->phone_number }}
+                                </p>
                             </div>
                         @endif
                     </div>
 
-                    <div class="md:w-1/2 p-8">
-                        <div class="mb-4">
-                            <span class="text-xs font-bold uppercase px-2 py-1 rounded {{ $item->type == 'lost' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' }}">
-                                {{ strtoupper($item->type) }}
-                            </span>
-                            <span class="ml-2 text-sm text-gray-500">{{ $item->category }}</span>
-                        </div>
+                    {{-- Action Section --}}
+                    <div class="mt-8 pt-8 border-t border-slate-100 dark:border-gray-700">
+                        @if(auth()->id() !== $item->user_id)
+                            @php
+                                $userClaim = \App\Models\Claim::where('item_id', $item->id)->where('user_id', auth()->id())->first();
+                            @endphp
 
-                        <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ $item->item_name }}</h1>
-                        
-                        <div class="space-y-4">
-                            <div>
-                                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Description</h3>
-                                <p class="mt-1 text-gray-700 leading-relaxed">{{ $item->description }}</p>
-                            </div>
+                            @if(!$userClaim)
+                                <form action="{{ route('claims.store') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="item_id" value="{{ $item->id }}">
+                                    <button type="submit" class="w-full py-4 rounded-2xl shadow-lg text-white font-bold transition-transform hover:scale-[1.02] active:scale-[0.98]" style="background: #5b4ef3;">
+                                        This is Mine / I Found This
+                                    </button>
+                                </form>
+                                <p class="text-[10px] text-center text-slate-400 mt-3 uppercase tracking-widest font-bold">Verification will be required</p>
 
-                            <div class="flex items-center text-gray-600">
-                                <i class="fas fa-map-marker-alt mr-2 text-blue-500"></i>
-                                <span><strong>Location:</strong> {{ $item->location }}</span>
-                            </div>
+                            @elseif($userClaim->status === 'approved')
+                                <div class="bg-emerald-50 dark:bg-emerald-900/20 p-6 rounded-[2rem] border border-emerald-100 dark:border-emerald-800 text-center">
+                                    <div class="flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-4">
+                                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                                        <span class="font-black uppercase tracking-wider">Claim Approved!</span>
+                                    </div>
 
-                            <div class="flex items-center text-gray-600">
-                                <i class="fas fa-calendar-alt mr-2 text-blue-500"></i>
-                                <span><strong>Posted:</strong> {{ $item->created_at->format('M d, Y') }}</span>
-                            </div>
-                        </div>
+                                    <p class="text-xs text-emerald-700 dark:text-emerald-300 font-medium leading-relaxed mb-6">
+                                        Your claim is verified. To prevent system abuse, you must view a short advertisement before printing your pass.
+                                    </p>
 
-                        <div class="mt-10 pt-6 border-t border-gray-100">
-                            @if(auth()->id() !== $item->user_id)
-                                @php
-                                    // NEW: We fetch the whole claim record instead of just checking if it exists
-                                    $userClaim = \App\Models\Claim::where('item_id', $item->id)
-                                                                 ->where('user_id', auth()->id())
-                                                                 ->first();
-                                @endphp
+                                    {{-- AD REDIRECT BUTTON --}}
+                                    <a href="{{ route('claims.ads', $userClaim->id) }}" 
+                                       class="inline-flex items-center justify-center w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-bold shadow-lg transition-all hover:scale-[1.02]">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                                        </svg>
+                                        View & Print Retrieval Pass
+                                    </a>
+                                </div>
 
-                                @if($userClaim)
-                                    @if($userClaim->status === 'approved')
-                                        <div class="bg-green-50 p-4 rounded-lg border border-green-200 text-green-800 text-center shadow-sm">
-                                            <div class="flex items-center justify-center mb-1">
-                                                <i class="fas fa-check-circle text-xl mr-2"></i>
-                                                <span class="font-bold text-lg">Claim Approved!</span>
-                                            </div>
-                                            <p class="text-sm">The administrator has verified your claim. Please coordinate to retrieve your item.</p>
-                                        </div>
-
-                                    @elseif($userClaim->status === 'rejected')
-                                        <div class="bg-red-50 p-4 rounded-lg border border-red-200 text-red-800 text-center">
-                                            <i class="fas fa-times-circle mr-1 text-lg"></i> 
-                                            <span class="font-bold">Claim Not Approved.</span>
-                                            <p class="text-xs mt-1">Please contact the admin for more details.</p>
-                                        </div>
-
-                                    @else
-                                        <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200 text-yellow-800 text-center">
-                                            <i class="fas fa-clock mr-1"></i> Your claim is <strong>Pending</strong>.
-                                            <p class="text-xs mt-1 italic">An admin will review your request soon.</p>
-                                        </div>
-                                    @endif
-                                @else
-                                    <form action="{{ route('items.claim', $item->id) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition shadow-lg transform active:scale-95">
-                                            <i class="fas fa-hand-paper mr-2"></i> I found this / This is mine
-                                        </button>
-                                        <p class="text-center text-gray-500 text-[10px] mt-3 italic">
-                                            The owner will be notified of your claim.
-                                        </p>
-                                    </form>
-                                @endif
+                            @elseif($userClaim->status === 'rejected')
+                                <div class="bg-rose-50 p-5 rounded-2xl border border-rose-100 text-rose-700 text-center">
+                                    <p class="font-black uppercase text-xs tracking-widest">Claim Not Approved</p>
+                                </div>
                             @else
-                                <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 text-blue-800 text-sm text-center">
-                                    <i class="fas fa-user-circle mr-1"></i> You posted this report. Manage claims in your dashboard.
+                                <div class="bg-amber-50 p-6 rounded-2xl border border-amber-100 text-amber-800 text-center">
+                                    <div class="flex items-center justify-center mb-1">
+                                        <svg class="w-5 h-5 mr-2 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        <p class="font-black uppercase text-xs tracking-widest">Claim Pending Review</p>
+                                    </div>
+                                    <p class="text-xs text-amber-700">The admin is checking your claim.</p>
                                 </div>
                             @endif
-                        </div>
+                        @else
+                            <div class="bg-indigo-50 dark:bg-indigo-900/20 p-5 rounded-2xl border border-indigo-100 dark:border-indigo-800 text-indigo-800 dark:text-indigo-300 text-sm text-center font-bold">
+                                You posted this report.
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-</x-app-layout>
+@endsection

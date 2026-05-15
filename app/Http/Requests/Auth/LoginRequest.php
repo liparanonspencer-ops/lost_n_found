@@ -42,6 +42,23 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
+        $user = \App\Models\User::where('email', $this->email)->first();
+
+        if ($user && ! $user->email_verified_at) {
+            // Regeneration of OTP if it's expired
+            if (\Illuminate\Support\Carbon::now()->gt($user->otp_expires_at)) {
+                $user->otp = (string) rand(100000, 999999);
+                $user->otp_expires_at = \Illuminate\Support\Carbon::now()->addMinutes(10);
+                $user->save();
+                $user->notify(new \App\Notifications\SendOTPNotification($user->otp));
+            }
+
+            throw ValidationException::withMessages([
+                'email' => 'Your account is not verified. Please verify your OTP.',
+            ])->redirectTo(route('otp.verify', ['email' => $this->email]));
+        }
+
+
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 

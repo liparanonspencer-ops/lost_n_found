@@ -17,8 +17,12 @@ class Claim extends Model
         'item_id',
         'user_id',
         'message',
-        'status', // pending, accepted, rejected
+        'status',
+        'is_resolved',
+        'is_rejected', // New field for rejection status
+        'claim_reference',
     ];
+    protected $casts = [ 'is_resolved' => 'boolean',];
 
     /**
      * Get the item associated with the claim.
