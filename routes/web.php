@@ -87,4 +87,44 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 });
 
+// Foolproof Route for InfinityFree Image Serving
+Route::get('/images/{filename}', function ($filename) {
+    // 1. Check new uploads path
+    $uploadPath = public_path('uploads/items/' . $filename);
+    if (file_exists($uploadPath)) {
+        return response()->file($uploadPath);
+    }
+    
+    // 2. Check old storage path
+    $storagePath = storage_path('app/public/items/' . $filename);
+    if (file_exists($storagePath)) {
+        return response()->file($storagePath);
+    }
+
+    abort(404);
+})->where('filename', '.*');
+
+// Foolproof Route for Profile Photos
+Route::get('/profiles/{filename}', function ($filename) {
+    // 1. Check new uploads path
+    $uploadPath = public_path('uploads/profiles/' . $filename);
+    if (file_exists($uploadPath)) {
+        return response()->file($uploadPath);
+    }
+    
+    // 2. Check old storage path
+    $storagePath = storage_path('app/public/' . $filename); // Note: old path might be 'profiles/filename' so let's handle both
+    if (file_exists($storagePath)) {
+        return response()->file($storagePath);
+    }
+    
+    // 3. Fallback if the path itself includes 'profiles/'
+    $storagePathWithFolder = storage_path('app/public/profiles/' . $filename);
+    if (file_exists($storagePathWithFolder)) {
+        return response()->file($storagePathWithFolder);
+    }
+
+    abort(404);
+})->where('filename', '.*');
+
 require __DIR__.'/auth.php';

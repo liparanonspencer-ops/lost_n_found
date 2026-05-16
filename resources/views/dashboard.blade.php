@@ -204,7 +204,7 @@
                     <div class="group bg-slate-50 dark:bg-gray-900 rounded-[2rem] overflow-hidden border border-slate-100 dark:border-gray-800 transition-all hover:shadow-xl">
                         <div class="h-48 overflow-hidden relative">
                             @if($item->image_path)
-                                <img src="{{ asset('storage/' . $item->image_path) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform">
+                                <img src="/images/{{ basename($item->image_path) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform">
                             @else
                                 <div class="flex h-full items-center justify-center opacity-20"><i class="fas fa-image text-3xl"></i></div>
                             @endif

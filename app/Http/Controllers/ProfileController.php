@@ -59,8 +59,10 @@ class ProfileController extends Controller
         }
 
         // Store new photo and save the path
-        $path = $request->file('profile_photo')->store('profiles', 'public');
-        $user->profile_photo = $path;
+        $file = $request->file('profile_photo');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('uploads/profiles'), $filename);
+        $user->profile_photo = 'uploads/profiles/' . $filename;
     }
 
     // 3. Reset Email Verification if changed

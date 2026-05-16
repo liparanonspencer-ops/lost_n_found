@@ -55,7 +55,7 @@ class User extends Authenticatable
     public function getPhotoUrlAttribute()
 {
     if ($this->profile_photo) {
-        return asset('storage/' . $this->profile_photo);
+        return url('/profiles/' . basename($this->profile_photo));
     }
 
     // Fallback to a UI Avatar based on the user's name if no photo exists
