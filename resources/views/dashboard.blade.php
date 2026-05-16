@@ -144,7 +144,7 @@
                         </p>
                         <div class="mt-4 flex items-center justify-between">
                             <span class="text-[10px] px-2 py-0.5 bg-white dark:bg-gray-800 rounded-md font-mono text-slate-500 border border-slate-100 dark:border-gray-700">
-                                ID: #{{ $notification->data['claim_id'] ?? '?' }}
+                                Claimant Tracking ID: #{{ $notification->data['claim_id'] ?? '?' }}
                             </span>
                         </div>
                     </div>

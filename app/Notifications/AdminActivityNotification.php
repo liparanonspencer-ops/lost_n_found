@@ -38,7 +38,7 @@ class AdminActivityNotification extends Notification
             ->line("You {$action} the claim for '{$this->claim->item->item_name}'.")
             ->action('View Admin History', route('admin.claims.history'));
     }
-
+  
     /**
      * This is what gets saved in the 'notifications' table for your Blade view
      */
@@ -48,6 +48,7 @@ class AdminActivityNotification extends Notification
         return [
             'type' => 'admin_log',
             'icon' => 'fas fa-user-shield',
+            'claim_id' => $this->claim->id,
             'title' => 'System: Action Logged',
             'message' => "You {$action} the claim for '{$this->claim->item->item_name}' submitted by {$this->claim->user->email}.",
             'url' => route('admin.claims.history'),

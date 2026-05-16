@@ -65,6 +65,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/claims', [ClaimController::class, 'index'])->name('claims.index');
         Route::get('/claims/history', [ClaimController::class, 'history'])->name('claims.history');
         Route::get('/verify-claim/{claim}', [ClaimController::class, 'verify'])->name('verify.claim');
+    
         
         // This is the CRITICAL route where Admin sets is_resolved = true
         Route::patch('/claims/{claim}', [ClaimController::class, 'update'])->name('claims.update');
