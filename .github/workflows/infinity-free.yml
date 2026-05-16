@@ -26,4 +26,4 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: /htdocs/  # For addon domains
           timeout: 86400000
-          log-level: standard
+          log-level: standardss
