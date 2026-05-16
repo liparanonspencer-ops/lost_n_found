@@ -34,7 +34,7 @@
                 {{-- Left Side: Image Section --}}
                 <div class="lg:w-1/2 bg-slate-100 dark:bg-gray-900 flex items-center justify-center relative h-[300px] sm:h-[400px] lg:h-auto">
                     @if($item->image_path)
-                        <img src="{{ asset('storage/' . $item->image_path) }}" class="w-full h-full object-cover">
+                        <img src="/images/{{ basename($item->image_path) }}" class="w-full h-full object-cover">
                     @else
                         <div class="flex flex-col items-center text-slate-400">
                             <svg class="w-16 h-16 mb-4 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">

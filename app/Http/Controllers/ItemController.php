@@ -91,8 +91,10 @@ class ItemController extends Controller
         $item->is_resolved = false;
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('items', 'public');
-            $item->image_path = $path;
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/items'), $filename);
+            $item->image_path = 'uploads/items/' . $filename;
         }
 
         $item->save();
