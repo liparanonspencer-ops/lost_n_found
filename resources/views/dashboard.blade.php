@@ -117,7 +117,7 @@
         </div>
 
         {{-- NEW: ADMIN NOTIFICATION CENTER --}}
-        <div class="mb-12 bg-white dark:bg-gray-800 rounded-[2.5rem] p-8 border border-slate-100 dark:border-gray-700 shadow-xl">
+        <div class="mb-12 bg-stone-400 dark:bg-gray-800 rounded-[2.5rem] p-8 border border-slate-100 dark:border-gray-700 shadow-xl">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="font-bold text-lg text-slate-800 dark:text-white flex items-center gap-2">
                     <i class="fas fa-history text-indigo-500"></i>
@@ -162,7 +162,7 @@
 
         {{-- USER SECTION: Slider --}}
         @can('user')
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12 bg-white dark:bg-gray-800 rounded-[3rem] p-4 shadow-2xl border border-slate-100 dark:border-gray-700 overflow-hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12 bg-slate-100 dark:bg-gray-900 rounded-[4rem] p-4 shadow-2xl border border-slate-100 dark:border-gray-700 overflow-hidden">
             <div x-data="{ 
                 activePulse: 1, 
                 pulses: [
@@ -172,7 +172,7 @@
                 next() { this.activePulse = this.activePulse === this.pulses.length ? 1 : this.activePulse + 1 }
             }" 
             x-init="setInterval(() => next(), 4000)"
-            class="relative h-64 md:h-[400px] rounded-[2.5rem] overflow-hidden bg-gray-900">
+            class="relative h-64 md:h-[400px] rounded-[4rem] overflow-hidden bg-gray-900">
                 <template x-for="pulse in pulses" :key="pulse.id">
                     <div x-show="activePulse === pulse.id" 
                          x-transition.opacity.duration.1000ms 
@@ -183,21 +183,31 @@
                         </div>
                     </div>
                 </template>
-            </div>
-
-            <div class="p-8 flex flex-col justify-center">
+</div>
+                   <div class="p-8 flex flex-col justify-center">
                 <span class="inline-block w-fit px-4 py-1 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 rounded-full text-[10px] font-black uppercase tracking-widest mb-4">Campus Safety Net</span>
                 <h1 class="text-3xl font-black mb-4 leading-tight">STI Lost & Found</h1>
                 <p class="text-slate-500 dark:text-slate-400 text-sm mb-8 leading-relaxed">Securely reuniting the campus community with their belongings through verified digital claims.</p>
+                
+            </div>
+        </div>
+
+</div>
+
+
+            <div class="p-8 flex flex-col justify-center">
+                <h1 class="text-3xl font-black mb-4 leading-tight">Mission</h1>
+                <p class="text-slate-500 dark:text-slate-400 text-sm mb-8 leading-relaxed">Our mission is to simplify campus life by providing a secure, automated lost-and-found platform that connects students with their missing belongings. By replacing disorganized manual logs with a high-trust digital system, we ensure fast recovery and strict data privacy compliance, creating a more honest and stress-free environment in campus</p>
                 <div class="flex gap-4">
                     <a href="{{ route('items.create') }}" class="flex-1 text-center py-4 bg-indigo-600 text-white font-bold rounded-2xl shadow-lg shadow-indigo-200/50">Report Item</a>
                     <a href="{{ route('items.index') }}" class="flex-1 text-center py-4 bg-slate-100 dark:bg-gray-700 font-bold rounded-2xl">Directory</a>
                 </div>
             </div>
         </div>
+</div>
 
         {{-- Community Feed --}}
-        <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] p-8 border border-slate-100 dark:border-gray-700 mb-12">
+        <div class="bg-slate-200 dark:bg-gray-800 rounded-[2.5rem] p-8 border border-slate-100 dark:border-gray-700 mb-12 mt-12 shadow-xl">
             <h3 class="text-xl font-bold mb-8">Community Feed</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 @forelse($items as $item)
@@ -228,7 +238,7 @@
         </div>
 
         {{-- USER CLAIMS SECTION --}}
-        <div class="bg-white dark:bg-gray-800 rounded-[2.5rem] p-8 border border-slate-100 dark:border-gray-700">
+        <div class="bg-slate-200 dark:bg-gray-800 rounded-[2.5rem] p-8 border border-slate-100 dark:border-gray-700 mt-12 shadow-xl">
             <div class="flex items-center gap-3 mb-8">
                 <div class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/40 rounded-xl flex items-center justify-center text-indigo-600">
                     <i class="fas fa-file-invoice"></i>

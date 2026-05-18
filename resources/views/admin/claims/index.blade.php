@@ -42,8 +42,8 @@
                         </thead>
                         <tbody class="divide-y divide-slate-50 dark:divide-gray-700">
                             @forelse($claims as $claim)
-                                <tr class="hover:bg-slate-50/80 dark:hover:bg-gray-700/30 transition duration-150 group">
-                                    <td class="p-6">
+                                <tr class="flex flex-col md:table-row hover:bg-slate-50/80 dark:hover:bg-gray-700/30 transition duration-150 group">
+                                    <td class="block md:table-cell p-2 md:p-6">
                                         <div class="flex items-center">
                                             <div class="relative w-12 h-12 shrink-0">
                                                 @if($claim->item->image_path)
@@ -64,7 +64,7 @@
                                         </div>
                                     </td>
 
-                                    <td class="p-6">
+                                    <td class="block md:table-cell p-2 md:p-6">
                                         <div class="text-sm font-bold text-slate-800 dark:text-slate-200">{{ $claim->user->first_name }} {{ $claim->user->last_name }}</div>
                                         <div class="text-[11px] text-slate-500 font-medium flex items-center mt-0.5">
                                             <svg class="w-3 h-3 mr-1 opacity-60" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
@@ -72,12 +72,12 @@
                                         </div>
                                     </td>
 
-                                    <td class="p-6 text-center">
+                                    <td class="block md:table-cell p-2 md:  text-center">
                                         <div class="text-sm font-bold text-slate-700 dark:text-slate-300">{{ $claim->created_at->format('M d, Y') }}</div>
                                         <div class="text-[10px] text-slate-400 font-medium">{{ $claim->created_at->diffForHumans() }}</div>
                                     </td>
 
-                                    <td class="p-6 text-right">
+                                    <td class="block md:table-cell p-2 md:  text-right">
                                         <div class="flex justify-end items-center gap-2">
                                             @if($claim->status === 'pending')
                                                 <form id="approve-form-{{ $claim->id }}" action="{{ route('admin.claims.update', $claim) }}" method="POST" class="inline">

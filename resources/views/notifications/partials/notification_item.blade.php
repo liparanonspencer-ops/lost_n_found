@@ -88,7 +88,7 @@
             {{-- Primary Action: View --}}
             @if(!empty($notification->data['url']))
                 <a href="{{ $notification->data['url'] }}" 
-                   class="inline-flex items-center gap-x-2 rounded-xl bg-slate-900 dark:bg-indigo-600 px-5 py-2.5 text-xs font-black text-white shadow-lg shadow-slate-200 dark:shadow-none hover:bg-slate-800 dark:hover:bg-indigo-500 transition active:scale-95">
+                   class="inline-flex items-center gap-x-2 rounded-xl bg-slate-900 dark:bg-indigo-600 px-5 py-2.5 text-xs font-black text-white shadow-lg shadow-slate-200 dark:shadow-none hover:bg-slate-800 dark:hover:bg-indigo-800 transition active:scale-95">
                     <i class="fas fa-eye text-[10px]"></i>
                     {{ __('View Details') }}
                 </a>
@@ -96,15 +96,17 @@
 
             {{-- Secondary Action: Delete --}}
             @if($isUnread)
+            <div class="flex flex-wrap items-center gap-3 mt-5">
                 <form action="{{ route('notifications.destroy', $notification->id) }}" method="POST">
                     @csrf
                     @method('DELETE')
                     <button type="submit" 
-                            class="inline-flex items-center gap-x-2 rounded-xl bg-white dark:bg-gray-800 px-5 py-2.5 text-xs font-bold text-slate-600 dark:text-slate-300 shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-gray-600 hover:bg-slate-50 dark:hover:bg-gray-700 transition active:scale-95">
+                            class="inline-flex items-center gap-x-2 rounded-xl bg-red-500 dark:bg-gray-800 px-5 py-2.5 text-xs font-bold text-white dark:text-slate-300 shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-gray-600 hover:bg-red-700 dark:hover:bg-gray-700 transition active:scale-95">
                         <i class="fas fa-trash text-red-500"></i>
                         {{ __('Delete') }}
                     </button>
                 </form>
+            </div>
             @endif
         </div>
     </div>

@@ -76,7 +76,7 @@
         </style>
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-zinc-100 dark:bg-gray-900 transition-colors duration-300">
+        <div class="min-h-screen bg-stone-400 dark:bg-gray-900 transition-colors duration-300">
             @include('layouts.navigation')
 
             <header class="bg-white dark:bg-gray-800 shadow transition-colors duration-300">
